@@ -3,3 +3,9 @@
 __pycache__/
 *.pyc
 *.code-workspace
+*.xlsx
+*.xls
+*.png
+*.jpg
+*.jpeg
+*.html

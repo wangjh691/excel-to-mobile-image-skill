@@ -699,11 +699,100 @@ def generate_card_html(df, stats, week_info):
                 background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
                 color: var(--text-main);
                 margin: 0;
-                padding: 75px 24px 30px 24px; /* 左右间距统一为 24px，实现完美左右对称，顶部预留 75px 安全防线 */
-                width: 100%; /* 自动撑满 650px 宽度视口 */
+                padding: 75px 24px 30px 24px;
+                width: 100%;
                 box-sizing: border-box;
             }}
             
+            /* 手机统计栏 Double-Bezel 双嵌套结构，集成微型 inline SVG 图标与独立数据信息块并列，打造成高端 Dashboard 组件 */
+            .stats-bar-shell {{
+                background-color: rgba(15, 23, 42, 0.04); /* 外层底座色 */
+                border-radius: var(--radius-lg);
+                padding: 4px;
+                margin-bottom: 24px;
+                border: 1px solid rgba(15, 23, 42, 0.05);
+            }}
+            
+            /* 工作量排行榜样式 */
+            .leaderboard-card-shell {{
+                background-color: rgba(15, 23, 42, 0.04);
+                border-radius: var(--radius-lg);
+                padding: 4px;
+                margin-bottom: 24px;
+                border: 1px solid rgba(15, 23, 42, 0.05);
+            }}
+            .leaderboard-card {{
+                display: flex;
+                background-color: var(--bg-card);
+                border-radius: calc(var(--radius-lg) - 4px);
+                padding: 16px;
+                box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), var(--shadow-stats);
+                gap: 16px;
+            }}
+            .leaderboard-column {{
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }}
+            .busy-col {{
+                border-right: 1px solid var(--border-light);
+                padding-right: 8px;
+            }}
+            .free-col {{
+                padding-left: 8px;
+            }}
+            .leaderboard-header {{
+                font-size: 12px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                letter-spacing: 0.05em;
+            }}
+            .busy-header {{
+                color: #dc2626;
+            }}
+            .free-header {{
+                color: #16a34a;
+            }}
+            .leaderboard-body {{
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }}
+            .leaderboard-item {{
+                display: flex;
+                align-items: center;
+                font-size: 13px;
+                color: var(--text-dark);
+            }}
+            .leaderboard-rank {{
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 18px;
+                height: 18px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 700;
+                margin-right: 8px;
+                color: white;
+            }}
+            .busy-col .rank-1 {{ background-color: #ef4444; }}
+            .busy-col .rank-2 {{ background-color: #f87171; }}
+            .free-col .rank-1 {{ background-color: #22c55e; }}
+            .free-col .rank-2 {{ background-color: #4ade80; }}
+            .leaderboard-name {{
+                font-weight: 700;
+                flex-grow: 1;
+            }}
+            .leaderboard-value {{
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                font-weight: 700;
+                color: var(--text-muted);
+            }}
+
             /* 手机专属头部（去 Emoji 改为精致 SVG 图标，顶部引入物理高光与深空极光渐变，配合精密径向网格） */
             .header {{
                 position: relative;
@@ -1198,6 +1287,53 @@ def generate_card_html(df, stats, week_info):
             </div>
         </div>
         
+        <!-- 工作量排行榜 -->
+        <div class="leaderboard-card-shell">
+            <div class="leaderboard-card">
+                <div class="leaderboard-column busy-col">
+                    <div class="leaderboard-header busy-header">
+                        <svg class="leaderboard-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        计划工时最多 (Top 2 Busy)
+                    </div>
+                    <div class="leaderboard-body">
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-rank rank-1">1</span>
+                            <span class="leaderboard-name">{stats['top_busy'][0][0]}</span>
+                            <span class="leaderboard-value">{stats['top_busy'][0][1]:g}h</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-rank rank-2">2</span>
+                            <span class="leaderboard-name">{stats['top_busy'][1][0]}</span>
+                            <span class="leaderboard-value">{stats['top_busy'][1][1]:g}h</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard-column free-col">
+                    <div class="leaderboard-header free-header">
+                        <svg class="leaderboard-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 12h8"/>
+                        </svg>
+                        计划工时最少 (Top 2 Free)
+                    </div>
+                    <div class="leaderboard-body">
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-rank rank-1">1</span>
+                            <span class="leaderboard-name">{stats['top_free'][0][0]}</span>
+                            <span class="leaderboard-value">{stats['top_free'][0][1]:g}h</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-rank rank-2">2</span>
+                            <span class="leaderboard-name">{stats['top_free'][1][0]}</span>
+                            <span class="leaderboard-value">{stats['top_free'][1][1]:g}h</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         {sections_html}
         
         <div class="footer">
@@ -1212,7 +1348,7 @@ def generate_card_html(df, stats, week_info):
 
 def calculate_stats(df):
     """
-    计算数据集统计指标，鲁棒求和工时
+    计算数据集统计指标，鲁棒求和工时，并筛选出最多和最少计划工作量的销售
     """
     stats = {}
     stats['total_count'] = len(df)
@@ -1231,6 +1367,28 @@ def calculate_stats(df):
     stats['total_sales'] = df['销售'].nunique()
     
     stats['generation_time'] = datetime.datetime.now().strftime("%Y-%m-%d")
+    
+    # 新增逻辑：筛选出2个计划工作量最多和2个最少的销售
+    SALES_LIST = ["邓正春", "饶达琴", "段振华", "钱丽云", "詹文成", "伍斌", "吴刚", "张进", "贺欢"]
+    sales_hours = {name: 0.0 for name in SALES_LIST}
+    
+    for _, row in df.iterrows():
+        name = str(row.get('销售', '')).strip()
+        if name in sales_hours:
+            try:
+                h_val = float(row.get('预计工时（h）', 0) or 0)
+            except (ValueError, TypeError):
+                h_val = 0.0
+            sales_hours[name] += h_val
+            
+    # 从大到小排序
+    sorted_sales = sorted(sales_hours.items(), key=lambda x: x[1], reverse=True)
+    
+    # 2个计划工作量最多的销售
+    stats['top_busy'] = sorted_sales[:2]
+    # 2个最少的销售（按从小到大排序展示）
+    stats['top_free'] = sorted_sales[-2:][::-1]
+    
     return stats
 
 def main():
@@ -1294,8 +1452,9 @@ def main():
     if df.empty:
         card_height = 800
     else:
-        estimated_height = 450 + (sales_count * 80) + (row_count * 180) + 300
-        card_height = max(1200, min(15000, estimated_height))
+        # 增加了排行榜卡片（约 150px 高度），基础高度由 450 调至 600
+        estimated_height = 600 + (sales_count * 80) + (row_count * 180) + 300
+        card_height = max(1300, min(15000, estimated_height))
     
     print("正在调用 Chrome Headless 渲染图片...")
     print(f"正在渲染手机卡片流长图 (650x{card_height} 自动裁剪) -> {card_png_path}")
