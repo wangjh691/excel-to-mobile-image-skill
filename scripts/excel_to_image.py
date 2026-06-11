@@ -786,6 +786,10 @@ def generate_card_html(df, stats, week_info):
             .leaderboard-name {{
                 font-weight: 700;
                 flex-grow: 1;
+                font-size: 12.5px;
+                line-height: 1.4;
+                padding-right: 8px;
+                word-break: break-all;
             }}
             .leaderboard-value {{
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1287,7 +1291,7 @@ def generate_card_html(df, stats, week_info):
             </div>
         </div>
         
-        <!-- 工作量排行榜 -->
+        <!-- 技术申请排行榜 -->
         <div class="leaderboard-card-shell">
             <div class="leaderboard-card">
                 <div class="leaderboard-column busy-col">
@@ -1295,7 +1299,7 @@ def generate_card_html(df, stats, week_info):
                         <svg class="leaderboard-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
-                        工作量最多 (Top 2 Busy)
+                        技术申请最多 (Top Busy)
                     </div>
                     <div class="leaderboard-body">
                         <div class="leaderboard-item">
@@ -1316,7 +1320,7 @@ def generate_card_html(df, stats, week_info):
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M8 12h8"/>
                         </svg>
-                        工作量最少 (Top 2 Free)
+                        技术申请最少 (Top Free)
                     </div>
                     <div class="leaderboard-body">
                         <div class="leaderboard-item">
@@ -1368,7 +1372,7 @@ def calculate_stats(df):
     
     stats['generation_time'] = datetime.datetime.now().strftime("%Y-%m-%d")
     
-    # 新增逻辑：筛选出2个计划工作量最多和2个最少的销售
+    # 新增逻辑：筛选出计划工作量最多（技术申请最多）和最少（技术申请最少）的销售，考虑多人并列情况
     SALES_LIST = ["邓正春", "饶达琴", "段振华", "钱丽云", "詹文成", "伍斌", "吴刚", "张进", "贺欢"]
     sales_projects = {name: 0 for name in SALES_LIST}
     sales_hours = {name: 0.0 for name in SALES_LIST}
@@ -1383,30 +1387,46 @@ def calculate_stats(df):
                 h_val = 0.0
             sales_hours[name] += h_val
             
-    # 计算最多工作量的2人：一个项目最多，一个工时最多（排除项目最多者以避免同一个人占满两个席位）
-    max_proj_sales = max(sales_projects.items(), key=lambda x: x[1])
-    busy_proj_name, busy_proj_count = max_proj_sales
+    # 一、计算最多部分（技术申请最多）
+    # 1. 申请最多（可多人并列）
+    max_proj_val = max(sales_projects.values())
+    busy_proj_names = [k for k, v in sales_projects.items() if v == max_proj_val]
     
-    remaining_sales_hours = {k: v for k, v in sales_hours.items() if k != busy_proj_name}
-    max_hour_sales = max(remaining_sales_hours.items(), key=lambda x: x[1])
-    busy_hour_name, busy_hour_val = max_hour_sales
-    
+    # 2. 工时最多（在排除申请最多的人后，从剩余人中选，可多人并列）
+    remaining_sales_hours = {k: v for k, v in sales_hours.items() if k not in busy_proj_names}
+    if remaining_sales_hours:
+        max_hour_val = max(remaining_sales_hours.values())
+        busy_hour_names = [k for k, v in remaining_sales_hours.items() if v == max_hour_val]
+        busy_hour_str = "、".join(busy_hour_names)
+        busy_hour_val_str = f"{max_hour_val:g}h"
+    else:
+        busy_hour_str = "-"
+        busy_hour_val_str = "0h"
+        
     stats['top_busy'] = [
-        (busy_proj_name, "项目最多", f"{busy_proj_count}项"),
-        (busy_hour_name, "工时最多", f"{busy_hour_val:g}h")
+        ("、".join(busy_proj_names), "申请最多", f"{max_proj_val}项"),
+        (busy_hour_str, "工时最多", busy_hour_val_str)
     ]
     
-    # 计算最少工作量的2人：一个项目最少，一个工时最少（排除项目最少者以避免重合）
-    min_proj_sales = min(sales_projects.items(), key=lambda x: x[1])
-    free_proj_name, free_proj_count = min_proj_sales
+    # 二、计算最少部分（技术申请最少）
+    # 1. 申请最少（可多人并列）
+    min_proj_val = min(sales_projects.values())
+    free_proj_names = [k for k, v in sales_projects.items() if v == min_proj_val]
     
-    remaining_free_hours = {k: v for k, v in sales_hours.items() if k != free_proj_name}
-    min_hour_sales = min(remaining_free_hours.items(), key=lambda x: x[1])
-    free_hour_name, free_hour_val = min_hour_sales
-    
+    # 2. 工时最少（在排除申请最少的人后，从剩余人中选，可多人并列）
+    remaining_free_hours = {k: v for k, v in sales_hours.items() if k not in free_proj_names}
+    if remaining_free_hours:
+        min_hour_val = min(remaining_free_hours.values())
+        free_hour_names = [k for k, v in remaining_free_hours.items() if v == min_hour_val]
+        free_hour_str = "、".join(free_hour_names)
+        free_hour_val_str = f"{min_hour_val:g}h"
+    else:
+        free_hour_str = "-"
+        free_hour_val_str = "0h"
+        
     stats['top_free'] = [
-        (free_proj_name, "项目最少", f"{free_proj_count}项"),
-        (free_hour_name, "工时最少", f"{free_hour_val:g}h")
+        ("、".join(free_proj_names), "申请最少", f"{min_proj_val}项"),
+        (free_hour_str, "工时最少", free_hour_val_str)
     ]
     
     return stats
