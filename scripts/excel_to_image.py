@@ -124,7 +124,10 @@ def clean_and_prepare_data(input_path):
         if col not in df.columns:
             df[col] = ''
             
-    df = df[target_columns]
+    df = df[target_columns].copy()
+    
+    # 确保预计工时（h）列在空值或非数字时填充为 0
+    df['预计工时（h）'] = pd.to_numeric(df['预计工时（h）'], errors='coerce').fillna(0)
     return df
 
 def beautify_excel(file_path):
