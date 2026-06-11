@@ -1400,7 +1400,7 @@ def calculate_stats(df):
     busy_hour_names = [k for k, v in sales_hours.items() if v == max_hour_val]
         
     stats['top_busy'] = [
-        ("、".join(busy_proj_names), "申请最多", f"{max_proj_val}项"),
+        ("、".join(busy_proj_names), "项数最多", f"{max_proj_val}项"),
         ("、".join(busy_hour_names), "工时最多", f"{max_hour_val:g}h")
     ]
     
@@ -1414,7 +1414,7 @@ def calculate_stats(df):
     free_hour_names = [k for k, v in sales_hours.items() if v == min_hour_val]
         
     stats['top_free'] = [
-        ("、".join(free_proj_names), "申请最少", f"{min_proj_val}项"),
+        ("、".join(free_proj_names), "项数最少", f"{min_proj_val}项"),
         ("、".join(free_hour_names), "工时最少", f"{min_hour_val:g}h")
     ]
     
