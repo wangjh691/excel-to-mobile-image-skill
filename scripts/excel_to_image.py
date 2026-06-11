@@ -1395,20 +1395,13 @@ def calculate_stats(df):
     max_proj_val = max(sales_projects.values())
     busy_proj_names = [k for k, v in sales_projects.items() if v == max_proj_val]
     
-    # 2. 工时最多（在排除申请最多的人后，从剩余人中选，可多人并列）
-    remaining_sales_hours = {k: v for k, v in sales_hours.items() if k not in busy_proj_names}
-    if remaining_sales_hours:
-        max_hour_val = max(remaining_sales_hours.values())
-        busy_hour_names = [k for k, v in remaining_sales_hours.items() if v == max_hour_val]
-        busy_hour_str = "、".join(busy_hour_names)
-        busy_hour_val_str = f"{max_hour_val:g}h"
-    else:
-        busy_hour_str = "-"
-        busy_hour_val_str = "0h"
+    # 2. 工时最多（可多人并列）
+    max_hour_val = max(sales_hours.values())
+    busy_hour_names = [k for k, v in sales_hours.items() if v == max_hour_val]
         
     stats['top_busy'] = [
         ("、".join(busy_proj_names), "申请最多", f"{max_proj_val}项"),
-        (busy_hour_str, "工时最多", busy_hour_val_str)
+        ("、".join(busy_hour_names), "工时最多", f"{max_hour_val:g}h")
     ]
     
     # 二、计算最少部分（技术申请最少）
@@ -1416,20 +1409,13 @@ def calculate_stats(df):
     min_proj_val = min(sales_projects.values())
     free_proj_names = [k for k, v in sales_projects.items() if v == min_proj_val]
     
-    # 2. 工时最少（在排除申请最少的人后，从剩余人中选，可多人并列）
-    remaining_free_hours = {k: v for k, v in sales_hours.items() if k not in free_proj_names}
-    if remaining_free_hours:
-        min_hour_val = min(remaining_free_hours.values())
-        free_hour_names = [k for k, v in remaining_free_hours.items() if v == min_hour_val]
-        free_hour_str = "、".join(free_hour_names)
-        free_hour_val_str = f"{min_hour_val:g}h"
-    else:
-        free_hour_str = "-"
-        free_hour_val_str = "0h"
+    # 2. 工时最少（可多人并列）
+    min_hour_val = min(sales_hours.values())
+    free_hour_names = [k for k, v in sales_hours.items() if v == min_hour_val]
         
     stats['top_free'] = [
         ("、".join(free_proj_names), "申请最少", f"{min_proj_val}项"),
-        (free_hour_str, "工时最少", free_hour_val_str)
+        ("、".join(free_hour_names), "工时最少", f"{min_hour_val:g}h")
     ]
     
     return stats
