@@ -767,22 +767,22 @@ def generate_card_html(df, stats, week_info):
                 font-size: 13px;
                 color: var(--text-dark);
             }}
-            .leaderboard-rank {{
+            .leaderboard-tag {{
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 18px;
-                height: 18px;
+                padding: 2px 6px;
                 border-radius: 4px;
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 700;
                 margin-right: 8px;
                 color: white;
+                white-space: nowrap;
             }}
-            .busy-col .rank-1 {{ background-color: #ef4444; }}
-            .busy-col .rank-2 {{ background-color: #f87171; }}
-            .free-col .rank-1 {{ background-color: #22c55e; }}
-            .free-col .rank-2 {{ background-color: #4ade80; }}
+            .busy-col .tag-proj {{ background-color: #ef4444; }}
+            .busy-col .tag-hour {{ background-color: #ea580c; }}
+            .free-col .tag-proj {{ background-color: #22c55e; }}
+            .free-col .tag-hour {{ background-color: #0d9488; }}
             .leaderboard-name {{
                 font-weight: 700;
                 flex-grow: 1;
@@ -1295,18 +1295,18 @@ def generate_card_html(df, stats, week_info):
                         <svg class="leaderboard-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
-                        计划工时最多 (Top 2 Busy)
+                        工作量最多 (Top 2 Busy)
                     </div>
                     <div class="leaderboard-body">
                         <div class="leaderboard-item">
-                            <span class="leaderboard-rank rank-1">1</span>
+                            <span class="leaderboard-tag tag-proj">{stats['top_busy'][0][1]}</span>
                             <span class="leaderboard-name">{stats['top_busy'][0][0]}</span>
-                            <span class="leaderboard-value">{stats['top_busy'][0][1]:g}h</span>
+                            <span class="leaderboard-value">{stats['top_busy'][0][2]}</span>
                         </div>
                         <div class="leaderboard-item">
-                            <span class="leaderboard-rank rank-2">2</span>
+                            <span class="leaderboard-tag tag-hour">{stats['top_busy'][1][1]}</span>
                             <span class="leaderboard-name">{stats['top_busy'][1][0]}</span>
-                            <span class="leaderboard-value">{stats['top_busy'][1][1]:g}h</span>
+                            <span class="leaderboard-value">{stats['top_busy'][1][2]}</span>
                         </div>
                     </div>
                 </div>
@@ -1316,18 +1316,18 @@ def generate_card_html(df, stats, week_info):
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M8 12h8"/>
                         </svg>
-                        计划工时最少 (Top 2 Free)
+                        工作量最少 (Top 2 Free)
                     </div>
                     <div class="leaderboard-body">
                         <div class="leaderboard-item">
-                            <span class="leaderboard-rank rank-1">1</span>
+                            <span class="leaderboard-tag tag-proj">{stats['top_free'][0][1]}</span>
                             <span class="leaderboard-name">{stats['top_free'][0][0]}</span>
-                            <span class="leaderboard-value">{stats['top_free'][0][1]:g}h</span>
+                            <span class="leaderboard-value">{stats['top_free'][0][2]}</span>
                         </div>
                         <div class="leaderboard-item">
-                            <span class="leaderboard-rank rank-2">2</span>
+                            <span class="leaderboard-tag tag-hour">{stats['top_free'][1][1]}</span>
                             <span class="leaderboard-name">{stats['top_free'][1][0]}</span>
-                            <span class="leaderboard-value">{stats['top_free'][1][1]:g}h</span>
+                            <span class="leaderboard-value">{stats['top_free'][1][2]}</span>
                         </div>
                     </div>
                 </div>
@@ -1370,24 +1370,44 @@ def calculate_stats(df):
     
     # 新增逻辑：筛选出2个计划工作量最多和2个最少的销售
     SALES_LIST = ["邓正春", "饶达琴", "段振华", "钱丽云", "詹文成", "伍斌", "吴刚", "张进", "贺欢"]
+    sales_projects = {name: 0 for name in SALES_LIST}
     sales_hours = {name: 0.0 for name in SALES_LIST}
     
     for _, row in df.iterrows():
         name = str(row.get('销售', '')).strip()
-        if name in sales_hours:
+        if name in SALES_LIST:
+            sales_projects[name] += 1
             try:
                 h_val = float(row.get('预计工时（h）', 0) or 0)
             except (ValueError, TypeError):
                 h_val = 0.0
             sales_hours[name] += h_val
             
-    # 从大到小排序
-    sorted_sales = sorted(sales_hours.items(), key=lambda x: x[1], reverse=True)
+    # 计算最多工作量的2人：一个项目最多，一个工时最多（排除项目最多者以避免同一个人占满两个席位）
+    max_proj_sales = max(sales_projects.items(), key=lambda x: x[1])
+    busy_proj_name, busy_proj_count = max_proj_sales
     
-    # 2个计划工作量最多的销售
-    stats['top_busy'] = sorted_sales[:2]
-    # 2个最少的销售（按从小到大排序展示）
-    stats['top_free'] = sorted_sales[-2:][::-1]
+    remaining_sales_hours = {k: v for k, v in sales_hours.items() if k != busy_proj_name}
+    max_hour_sales = max(remaining_sales_hours.items(), key=lambda x: x[1])
+    busy_hour_name, busy_hour_val = max_hour_sales
+    
+    stats['top_busy'] = [
+        (busy_proj_name, "项目最多", f"{busy_proj_count}项"),
+        (busy_hour_name, "工时最多", f"{busy_hour_val:g}h")
+    ]
+    
+    # 计算最少工作量的2人：一个项目最少，一个工时最少（排除项目最少者以避免重合）
+    min_proj_sales = min(sales_projects.items(), key=lambda x: x[1])
+    free_proj_name, free_proj_count = min_proj_sales
+    
+    remaining_free_hours = {k: v for k, v in sales_hours.items() if k != free_proj_name}
+    min_hour_sales = min(remaining_free_hours.items(), key=lambda x: x[1])
+    free_hour_name, free_hour_val = min_hour_sales
+    
+    stats['top_free'] = [
+        (free_proj_name, "项目最少", f"{free_proj_count}项"),
+        (free_hour_name, "工时最少", f"{free_hour_val:g}h")
+    ]
     
     return stats
 
