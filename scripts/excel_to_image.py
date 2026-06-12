@@ -17,36 +17,37 @@ CSS_VARIABLES = """
   --primary-light: #1e293b; /* slate-800 */
   --accent: #2563eb;        /* blue-600 */
   --accent-light: #eff6ff;  /* blue-50 */
-  --bg-main: #f3f5f8;       /* slate-100 偏莫兰迪浅灰蓝，打造通透底色 */
+  --bg-main: #f8fafc;       /* slate-50 极高雅淡雅底色 */
   --bg-card: #ffffff;
-  --text-main: #334155;     /* slate-700 柔和文本，降低阅读对比度疲劳 */
+  --text-main: #475569;     /* slate-600 极致阅读体验，不显刺眼 */
   --text-dark: #0f172a;     /* slate-900 */
   --text-muted: #64748b;    /* slate-500 */
-  --border-light: #e2e8f0;  /* slate-200 */
+  --border-light: rgba(15, 23, 42, 0.06); /* 更隐蔽通透的轻虚边框 */
   
-  /* 统一圆角比例：大圆角 16px，小圆角 6px */
-  --radius-lg: 16px;
-  --radius-sm: 6px;
+  /* 统一圆角黄金比例：大圆角 24px，中圆角 16px，小圆角 8px */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
   
   /* 莫兰迪低饱和度雅致颜色 */
   --badge-yes-bg: #f0fdf4;   /* 极浅绿 */
   --badge-yes-text: #166534;  /* 深绿 */
-  --badge-no-bg: #f1f5f9;    /* 极浅灰 */
+  --badge-no-bg: #f8fafc;    /* 极浅灰 */
   --badge-no-text: #475569;   /* 深灰 */
   
   /* 兵种标签统一为冷色调拼图 */
-  --badge-af-bg: #f0f9ff;    /* 安服 - 浅蓝 */
-  --badge-af-text: #0369a1;  /* 安服 - 深蓝 */
-  --badge-xf-bg: #f0fdfa;    /* 行销 - 极浅青 */
-  --badge-xf-text: #0d9488;  /* 行销 - 深青 */
-  --badge-jf-bg: #eef2ff;    /* 技服 - 极浅靛 */
-  --badge-jf-text: #4f46e5;  /* 技服 - 深靛 */
-  --badge-other-bg: #f8fafc; /* 其他 */
+  --badge-af-bg: rgba(3, 105, 161, 0.04);   /* 安服 - 极低饱和度浅蓝 */
+  --badge-af-text: #0369a1;                 /* 安服 - 深蓝 */
+  --badge-xf-bg: rgba(13, 148, 136, 0.04);  /* 行销 - 极低饱和度浅青 */
+  --badge-xf-text: #0d9488;                 /* 行销 - 深青 */
+  --badge-jf-bg: rgba(79, 70, 229, 0.04);   /* 技服 - 极低饱和度浅靛 */
+  --badge-jf-text: #4f46e5;                 /* 技服 - 深靛 */
+  --badge-other-bg: #f8fafc;                /* 其他 */
   --badge-other-text: #64748b;
   
-  /* 物理高光微阴影，混合背景靛蓝色调 (Tinted shadows) */
-  --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.02), 0 2px 4px rgba(15, 23, 42, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  --shadow-stats: 0 6px 16px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  /* 多层微偏靛蓝色相环境影 (Tinted soft ambient shadows) + 顶部高光边缘 (Bezel highlight) */
+  --shadow-card: 0 12px 30px -4px rgba(15, 23, 42, 0.03), 0 4px 12px -2px rgba(15, 23, 42, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --shadow-stats: 0 16px 32px -6px rgba(15, 23, 42, 0.04), 0 4px 8px -2px rgba(15, 23, 42, 0.02);
 }
 """
 
@@ -708,40 +709,32 @@ def generate_card_html(df, stats, week_info):
                 text-rendering: optimizeLegibility;
             }}
             
-            /* 手机统计栏 Double-Bezel 双嵌套结构，集成微型 inline SVG 图标与独立数据信息块并列，打造成高端 Dashboard 组件 */
-            .stats-bar-shell {{
-                background-color: rgba(15, 23, 42, 0.04); /* 外层底座色 */
-                border-radius: var(--radius-lg);
-                padding: 4px;
-                margin-bottom: 24px;
-                border: 1px solid rgba(15, 23, 42, 0.05);
-            }}
-            
 
-
-            /* 手机专属头部（去 Emoji 改为精致 SVG 图标，顶部引入物理高光与深空极光渐变，配合精密径向网格） */
+            /* 手机专属头部（浅色通透毛玻璃画报风，贯彻 Theme Lock 极简美学） */
             .header {{
                 position: relative;
-                background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%); /* 深空三色极光 */
-                color: white;
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                color: var(--text-dark);
                 border-radius: var(--radius-lg);
-                padding: 26px 20px;
+                padding: 24px 20px;
                 margin-bottom: 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
-                border-top: 1px solid rgba(255, 255, 255, 0.18); /* 顶部微光折射 */
-                box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1), 0 2px 6px rgba(15, 23, 42, 0.15); /* 底部微偏色发光阴影 */
+                gap: 8px;
+                border: 1px solid rgba(15, 23, 42, 0.06);
+                box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.9);
                 overflow: hidden;
             }}
             
-            /* 科技微网格背景层 */
+            /* 微静谧灰色几何斜网格装饰线，倾注画报级质感 */
             .header::before {{
                 content: "";
                 position: absolute;
                 inset: 0;
-                background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0);
+                background-image: radial-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 0);
                 background-size: 14px 14px;
                 pointer-events: none;
                 z-index: 1;
@@ -756,26 +749,25 @@ def generate_card_html(df, stats, week_info):
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 38px;
-                height: 38px;
-                background-color: rgba(255, 255, 255, 0.12);
+                width: 36px;
+                height: 36px;
+                background-color: rgba(37, 99, 235, 0.06);
                 border-radius: 50%;
-                color: #93c5fd; /* 莫兰迪蓝色高亮 */
+                color: var(--accent); /* 莫兰迪蓝色高亮 */
             }}
             
             .header-icon {{
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
             }}
             
             .header h1 {{
-                font-size: 20px;
+                font-size: 19px;
                 margin: 0;
                 font-weight: 800;
-                letter-spacing: 0.08em; /* 增大字距展现高级质感 */
-                text-transform: uppercase;
+                letter-spacing: 0.12em; /* 增大字距展现经典瑞士版式 */
+                color: var(--text-dark);
                 text-align: center;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
             }}
             
             /* 手机统计栏 Double-Bezel 双嵌套结构，集成微型 inline SVG 图标与独立数据信息块并列，打造成高端 Dashboard 组件 */
@@ -958,31 +950,33 @@ def generate_card_html(df, stats, week_info):
                 position: relative;
                 overflow: hidden;
                 background-color: var(--bg-card);
-                border: 1px solid rgba(15, 23, 42, 0.08); /* 极致细致的外边框线 */
-                border-radius: var(--radius-lg);
+                border: 1px solid rgba(15, 23, 42, 0.06); /* 更隐蔽细致的灰色外框线 */
+                border-radius: var(--radius-md); /* concentric 嵌套中圆角 */
                 padding: 12px 14px;
                 box-shadow: var(--shadow-card); /* 双重浮雕微阴影 */
             }}
             
             /* 重点协作项目 Accent Card（高亮聚焦卡），打破上下纯长条的单调性，制造横向视线律动 */
             .plan-card-accent {{
-                background: linear-gradient(180deg, #ffffff 0%, #fcfdfe 100%);
-                border: 1px solid rgba(37, 99, 235, 0.18);
-                box-shadow: 0 4px 20px rgba(37, 99, 235, 0.04), 0 2px 4px rgba(15, 23, 42, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+                background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%); /* 渐变融入极淡雅莫兰迪蓝 */
+                border: 1px solid rgba(37, 99, 235, 0.12); /* 降噪蓝色边框 */
+                box-shadow: 0 12px 30px -4px rgba(37, 99, 235, 0.04), 0 2px 6px -1px rgba(37, 99, 235, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.95);
             }}
             
-            /* 高档艺术感背景超大字号序号水印 */
+            /* 高档艺术感背景超大字号序号水印，融入穿插斜体，极具排版呼吸感 */
             .card-watermark {{
                 position: absolute;
                 bottom: 2px;
                 right: 14px;
-                font-size: 54px; /* 减小字号以适配更紧凑的卡片 */
+                font-size: 60px; /* 适度加大展现穿插 */
                 font-weight: 900;
-                color: rgba(15, 23, 42, 0.022); /* 水印颜色调浅，表达极致清透感 */
+                font-style: italic; /* 倾斜体现动态感 */
+                color: rgba(15, 23, 42, 0.012); /* 极致清透，防止干扰正文阅读 */
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
                 line-height: 1;
                 pointer-events: none;
                 z-index: 1;
+                transform: rotate(-3deg); /* 倾斜打破呆板 */
             }}
             
             .card-header {{
@@ -1004,18 +998,18 @@ def generate_card_html(df, stats, week_info):
             /* 视觉聚焦锚点（微渐变蓝色竖条且带有圆角发光投影，极具高档质感） */
             .customer-anchor {{
                 display: inline-block;
-                width: 3.5px;
+                width: 3px;
                 height: 14px;
                 background: linear-gradient(to bottom, var(--accent), #60a5fa);
-                border-radius: 2px;
+                border-radius: 1.5px;
                 flex-shrink: 0;
-                box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+                box-shadow: 0 1px 3px rgba(37, 99, 235, 0.15);
             }}
             
             .plan-card-accent .customer-anchor {{
-                width: 5px; /* 高亮聚焦卡竖线加粗 */
+                width: 4px; /* 高亮聚焦卡竖线加粗 */
                 background: linear-gradient(to bottom, #2563eb, #3b82f6);
-                box-shadow: 0 1px 6px rgba(37, 99, 235, 0.4); /* 发光增强 */
+                box-shadow: 0 1px 5px rgba(37, 99, 235, 0.3); /* 发光增强 */
             }}
             
             .card-header-badges {{
@@ -1025,7 +1019,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .customer-name {{
-                font-size: 15px;
+                font-size: 14.5px;
                 font-weight: 800;
                 color: var(--text-dark);
                 line-height: 1.35;
@@ -1053,16 +1047,16 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .field-label {{
-                font-size: 10px;
+                font-size: 9.5px;
                 color: var(--text-muted);
                 font-weight: 700;
-                letter-spacing: 0.05em;
+                letter-spacing: 0.08em; /* 增大字距展现高质感 */
                 text-transform: uppercase;
                 margin-bottom: 1px;
             }}
             
             .field-value {{
-                font-size: 13px;
+                font-size: 12.5px;
                 color: var(--text-main);
                 line-height: 1.4;
             }}
@@ -1075,62 +1069,63 @@ def generate_card_html(df, stats, week_info):
             
             /* 优化备注框的左侧边框颜色与背景透光感，改为精致的微蓝透光背景 */
             .remark-box {{
-                background: rgba(37, 99, 235, 0.03); /* 高级淡蓝透光纸张感 */
+                background: rgba(37, 99, 235, 0.02); /* 高级淡蓝透光纸张感 */
                 padding: 6px 10px;
                 border-radius: var(--radius-sm);
-                border-left: 3px solid #60a5fa; 
+                border-left: 2.5px solid rgba(37, 99, 235, 0.35); /* 柔和莫兰迪蓝线 */
                 margin-top: 4px;
-                font-size: 12px;
+                font-size: 11.5px;
                 line-height: 1.45;
             }}
             
-            /* 徽章 */
+            /* 徽章，通过微字号与字距加宽表现高级感 */
             .badge {{
                 display: inline-flex;
                 align-items: center;
-                padding: 3px 7px;
+                padding: 3px 6px;
                 border-radius: var(--radius-sm);
-                font-size: 11px;
+                font-size: 10px; /* 微字号 */
                 font-weight: 600;
+                letter-spacing: 0.03em; /* 优化字距 */
                 width: fit-content;
                 line-height: 1;
             }}
             .badge-yes {{ 
                 background-color: var(--badge-yes-bg); 
                 color: var(--badge-yes-text); 
-                border: 1px solid rgba(22, 101, 52, 0.12);
+                border: 1px solid rgba(22, 101, 52, 0.08);
             }}
             .badge-no {{ 
                 background-color: var(--badge-no-bg); 
                 color: var(--badge-no-text); 
-                border: 1px solid rgba(71, 85, 105, 0.1);
+                border: 1px solid rgba(71, 85, 105, 0.06);
             }}
             .badge-af {{ 
                 background-color: var(--badge-af-bg); 
                 color: var(--badge-af-text); 
-                border: 1px solid rgba(3, 105, 161, 0.12);
+                border: 1px solid rgba(3, 105, 161, 0.08);
             }}
             .badge-xf {{ 
                 background-color: var(--badge-xf-bg); 
                 color: var(--badge-xf-text); 
-                border: 1px solid rgba(13, 148, 136, 0.12);
+                border: 1px solid rgba(13, 148, 136, 0.08);
             }}
             .badge-jf {{ 
                 background-color: var(--badge-jf-bg); 
                 color: var(--badge-jf-text); 
-                border: 1px solid rgba(79, 70, 229, 0.12);
+                border: 1px solid rgba(79, 70, 229, 0.08);
             }}
             .badge-other {{ 
                 background-color: var(--badge-other-bg); 
                 color: var(--badge-other-text); 
-                border: 1px solid rgba(100, 116, 139, 0.1);
+                border: 1px solid rgba(100, 116, 139, 0.06);
             }}
             
             /* 工时 Badge 胶囊化 */
             .badge-hours {{
                 background-color: #fff7ed;
                 color: #ea580c;
-                border: 1px solid rgba(234, 88, 12, 0.12);
+                border: 1px solid rgba(234, 88, 12, 0.08);
                 border-radius: 12px; /* 胶囊化 */
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             }}
