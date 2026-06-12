@@ -9,6 +9,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from PIL import Image
+import re
 
 # 设置中文字体首选和 CSS 样式
 CSS_VARIABLES = """
@@ -85,6 +86,91 @@ def find_chrome_binary():
             
     return None
 
+def simplify_plan_time(time_str):
+    """
+    智能合并和简化“计划时间”段文本，支持去重、排序及区间连续合并（如：周一下午至周五下午）
+    """
+    if not isinstance(time_str, str) or not time_str.strip() or time_str == 'nan':
+        return ""
+        
+    # 用常见分隔符切分
+    parts = re.split(r'[,，、;\s\n\+]+', time_str)
+    slots_found = set()
+    has_unrecognized = False
+    
+    days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    day_map = {d: i for i, d in enumerate(days)}
+    
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        
+        # 匹配 "周X全天"
+        match_all = re.match(r'^(周[一二三四五六日])全天$', part)
+        if match_all:
+            d = match_all.group(1)
+            d_idx = day_map[d]
+            slots_found.add(d_idx * 2)     # 上午
+            slots_found.add(d_idx * 2 + 1) # 下午
+            continue
+            
+        # 匹配 "周X上午" 或 "周X下午"
+        match_half = re.match(r'^(周[一二三四五六日])(上午|下午)$', part)
+        if match_half:
+            d = match_half.group(1)
+            t = match_half.group(2)
+            d_idx = day_map[d]
+            t_idx = 0 if t == '上午' else 1
+            slots_found.add(d_idx * 2 + t_idx)
+            continue
+            
+        has_unrecognized = True
+        
+    # 如果识别出 slot，但存在无法识别的内容（如特定备注等），为防破坏信息，保持原样
+    if not slots_found or has_unrecognized:
+        return time_str
+        
+    sorted_slots = sorted(list(slots_found))
+    
+    # 合并连续的时间槽
+    ranges = []
+    if sorted_slots:
+        start = sorted_slots[0]
+        prev = sorted_slots[0]
+        for val in sorted_slots[1:]:
+            if val == prev + 1:
+                prev = val
+            else:
+                ranges.append((start, prev))
+                start = val
+                prev = val
+        ranges.append((start, prev))
+        
+    # 辅助还原槽为文字
+    def slot_to_str(idx):
+        d_idx = idx // 2
+        t_idx = idx % 2
+        d_str = days[d_idx]
+        t_str = '上午' if t_idx == 0 else '下午'
+        return d_str, t_str
+        
+    range_strs = []
+    for r_start, r_end in ranges:
+        if r_start == r_end:
+            d, t = slot_to_str(r_start)
+            range_strs.append(f"{d}{t}")
+        elif r_start + 1 == r_end and r_start % 2 == 0:
+            # 同一天的上午和下午，合并为全天
+            d, _ = slot_to_str(r_start)
+            range_strs.append(f"{d}全天")
+        else:
+            d1, t1 = slot_to_str(r_start)
+            d2, t2 = slot_to_str(r_end)
+            range_strs.append(f"{d1}{t1}至{d2}{t2}")
+            
+    return "、".join(range_strs)
+
 def clean_and_prepare_data(input_path):
     """
     读取并清洗 Excel 数据，按销售排序，新增序号，保留指定字段
@@ -127,6 +213,10 @@ def clean_and_prepare_data(input_path):
             
     df = df[target_columns].copy()
     
+    # 对计划时间进行智能合并简化
+    if '计划时间' in df.columns:
+        df['计划时间'] = df['计划时间'].astype(str).apply(simplify_plan_time)
+        
     # 确保预计工时（h）列在空值或非数字时填充为 0
     df['预计工时（h）'] = pd.to_numeric(df['预计工时（h）'], errors='coerce').fillna(0)
     return df
