@@ -64,10 +64,10 @@ description: 用于将工作计划等复杂 Excel 表格进行数据清洗、销
 此技能的核心执行逻辑已完全封装于脚本中，您在接收到用户的文件后，应当执行如下步骤：
 
 1. **定位输入文件**：确认输入的原始 Excel 路径。
-2. **确认脚本位置**：该技能的脚本位于 `[excel_to_image.py](file:///Users/wangjunhua/Desktop/00.工作资料/agi/SKILL/excel-to-mobile-image-skill/scripts/excel_to_image.py)`。
+2. **确认脚本位置**：该技能的脚本位于 `scripts/excel_to_image.py`。
 3. **在终端执行转换命令**：
    ```bash
-   python3 "/Users/wangjunhua/Desktop/00.工作资料/agi/SKILL/excel-to-mobile-image-skill/scripts/excel_to_image.py" --input "/path/to/input.xlsx"
+   python3 scripts/excel_to_image.py --input "/path/to/input.xlsx"
    ```
 4. **验证并反馈**：
    - 脚本执行完成后将自动在输入文件同级目录下生成：
