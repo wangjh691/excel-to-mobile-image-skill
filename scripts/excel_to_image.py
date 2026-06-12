@@ -1326,16 +1326,53 @@ def main():
     
     print("正在调用 Chrome Headless 渲染图片...")
     print(f"正在渲染手机卡片流长图 (650x{card_height} 自动裁剪) -> {card_png_path}")
+    from pathlib import Path
+    import tempfile
+    import shutil
+    
+    card_html_url = Path(card_html_path).as_uri()
+    
+    # 每次运行生成唯一的随机临时 Profile 目录，彻底避免多次运行时的占锁冲突卡死
+    chrome_profile_dir = tempfile.mkdtemp(prefix="chrome_profile_")
+    
     cmd_card = [
         chrome_path,
         "--headless",
         "--disable-gpu",
-        "--force-device-scale-factor=3",  # 提升为 3 倍视网膜缩放因子，提供极高清晰度无损画质
+        "--no-first-run",                   # 跳过首次运行欢迎引导，防止新建 Profile 时卡死
+        "--no-default-browser-check",        # 跳过默认浏览器检测
+        "--disable-background-networking",   # 禁用后台网络交互，加速启动并防无网环境卡死
+        "--disable-sync",                    # 禁用账户同步
+        "--disable-translate",               # 禁用翻译组件
+        "--disable-default-apps",            # 禁用默认应用
+        "--mute-audio",                      # 禁用音频
+        "--force-device-scale-factor=3",     # 提升为 3 倍视网膜缩放因子，提供极高清晰度无损画质
         f"--screenshot={card_png_path}",
         f"--window-size=650,{card_height}",
-        card_html_path
+        f"--user-data-dir={chrome_profile_dir}",  # 隔离独立的临时配置目录，保证多实例和前后次运行绝对不锁死
+        card_html_url
     ]
-    subprocess.run(cmd_card, capture_output=True)
+    try:
+        print("正在启动 Chrome 进行截图...")
+        result = subprocess.run(cmd_card, capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            print(f"Chrome 运行失败，退出码: {result.returncode}")
+            print(f"Stdout:\n{result.stdout}")
+            print(f"Stderr:\n{result.stderr}")
+        else:
+            print("Chrome 截图成功！")
+    except subprocess.TimeoutExpired as e:
+        print("Chrome 截图超时（30秒限制）！已强制终止。")
+        print(f"目前已有的 stdout:\n{e.stdout}")
+        print(f"目前已有的 stderr:\n{e.stderr}")
+    except Exception as e:
+        print(f"调用 Chrome 截图时发生未知错误: {e}")
+    
+    # 清理临时 Profile 目录
+    try:
+        shutil.rmtree(chrome_profile_dir)
+    except Exception:
+        pass
     
     # 执行智能高精度高度裁剪
     crop_image_by_marker(card_png_path)
