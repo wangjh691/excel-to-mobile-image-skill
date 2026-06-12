@@ -470,8 +470,9 @@ def generate_table_html(df, stats):
                     <div class="card-value">{stats['total_customers']}<span>家</span></div>
                 </div>
                 <div class="card">
-                    <div class="card-label">销售团队</div>
-                    <div class="card-value">{stats['total_sales']}<span>人</span></div>
+                    <div class="card-label">未申请销售</div>
+                    <div class="card-value">{stats['unapplied_sales_count']}<span>人</span></div>
+                    <div class="card-sub" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.2; word-break: break-all;">名单：{stats['unapplied_sales_names'] or '无'}</div>
                 </div>
             </div>
             
@@ -497,7 +498,7 @@ def generate_table_html(df, stats):
             </table>
             
             <div class="footer">
-                生成时间：{stats['generation_time']} | 页面宽度已适配电脑端大图查看
+                页面宽度已适配电脑端大图查看
             </div>
         </div>
     </body>
@@ -640,16 +641,13 @@ def generate_card_html(df, stats, week_info):
                             <span class="field-label">工作类型</span>
                             <span class="field-value font-semibold text-dark">{row['工作类型']}</span>
                         </div>
+                        <div class="grid-item" style="flex: 1.2;">
+                            <span class="field-label">协作安排</span>
+                            <span class="field-value">{collab_html}</span>
+                        </div>
                         <div class="grid-item">
                             <span class="field-label">计划时间</span>
                             <span class="field-value text-dark">{row['计划时间']}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="card-grid border-top">
-                        <div class="grid-item">
-                            <span class="field-label">协作安排</span>
-                            <span class="field-value">{collab_html}</span>
                         </div>
                     </div>
                     
@@ -705,6 +703,9 @@ def generate_card_html(df, stats, week_info):
                 padding: 75px 24px 30px 24px;
                 width: 100%;
                 box-sizing: border-box;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
             }}
             
             /* 手机统计栏 Double-Bezel 双嵌套结构，集成微型 inline SVG 图标与独立数据信息块并列，打造成高端 Dashboard 组件 */
@@ -716,89 +717,7 @@ def generate_card_html(df, stats, week_info):
                 border: 1px solid rgba(15, 23, 42, 0.05);
             }}
             
-            /* 工作量排行榜样式 */
-            .leaderboard-card-shell {{
-                background-color: rgba(15, 23, 42, 0.04);
-                border-radius: var(--radius-lg);
-                padding: 4px;
-                margin-bottom: 24px;
-                border: 1px solid rgba(15, 23, 42, 0.05);
-            }}
-            .leaderboard-card {{
-                display: flex;
-                background-color: var(--bg-card);
-                border-radius: calc(var(--radius-lg) - 4px);
-                padding: 16px;
-                box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), var(--shadow-stats);
-                gap: 16px;
-            }}
-            .leaderboard-column {{
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }}
-            .busy-col {{
-                border-right: 1px solid var(--border-light);
-                padding-right: 8px;
-            }}
-            .free-col {{
-                padding-left: 8px;
-            }}
-            .leaderboard-header {{
-                font-size: 12px;
-                font-weight: 800;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                letter-spacing: 0.05em;
-            }}
-            .busy-header {{
-                color: #dc2626;
-            }}
-            .free-header {{
-                color: #16a34a;
-            }}
-            .leaderboard-body {{
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-            }}
-            .leaderboard-item {{
-                display: flex;
-                align-items: center;
-                font-size: 13px;
-                color: var(--text-dark);
-            }}
-            .leaderboard-tag {{
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 2px 6px;
-                border-radius: 4px;
-                font-size: 10px;
-                font-weight: 700;
-                margin-right: 8px;
-                color: white;
-                white-space: nowrap;
-            }}
-            .busy-col .tag-proj {{ background-color: #ef4444; }}
-            .busy-col .tag-hour {{ background-color: #ea580c; }}
-            .free-col .tag-proj {{ background-color: #22c55e; }}
-            .free-col .tag-hour {{ background-color: #0d9488; }}
-            .leaderboard-name {{
-                font-weight: 700;
-                flex-grow: 1;
-                font-size: 12.5px;
-                line-height: 1.4;
-                padding-right: 8px;
-                word-break: break-all;
-            }}
-            .leaderboard-value {{
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-                font-weight: 700;
-                color: var(--text-muted);
-            }}
+
 
             /* 手机专属头部（去 Emoji 改为精致 SVG 图标，顶部引入物理高光与深空极光渐变，配合精密径向网格） */
             .header {{
@@ -1032,7 +951,7 @@ def generate_card_html(df, stats, week_info):
             .sales-cards {{
                 display: flex;
                 flex-direction: column;
-                gap: 12px;
+                gap: 8px;
             }}
             
             .plan-card {{
@@ -1041,7 +960,7 @@ def generate_card_html(df, stats, week_info):
                 background-color: var(--bg-card);
                 border: 1px solid rgba(15, 23, 42, 0.08); /* 极致细致的外边框线 */
                 border-radius: var(--radius-lg);
-                padding: 16px;
+                padding: 12px 14px;
                 box-shadow: var(--shadow-card); /* 双重浮雕微阴影 */
             }}
             
@@ -1055,9 +974,9 @@ def generate_card_html(df, stats, week_info):
             /* 高档艺术感背景超大字号序号水印 */
             .card-watermark {{
                 position: absolute;
-                bottom: 8px;
+                bottom: 2px;
                 right: 14px;
-                font-size: 72px; /* 进一步放大 */
+                font-size: 54px; /* 减小字号以适配更紧凑的卡片 */
                 font-weight: 900;
                 color: rgba(15, 23, 42, 0.022); /* 水印颜色调浅，表达极致清透感 */
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1070,7 +989,7 @@ def generate_card_html(df, stats, week_info):
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 12px;
+                margin-bottom: 8px;
                 position: relative;
                 z-index: 2;
             }}
@@ -1115,7 +1034,7 @@ def generate_card_html(df, stats, week_info):
             .card-body {{
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
                 position: relative;
                 z-index: 2;
             }}
@@ -1123,7 +1042,7 @@ def generate_card_html(df, stats, week_info):
             .card-grid {{
                 display: flex;
                 justify-content: space-between;
-                gap: 10px;
+                gap: 8px;
             }}
             
             .grid-item {{
@@ -1139,30 +1058,30 @@ def generate_card_html(df, stats, week_info):
                 font-weight: 700;
                 letter-spacing: 0.05em;
                 text-transform: uppercase;
-                margin-bottom: 2px;
+                margin-bottom: 1px;
             }}
             
             .field-value {{
-                font-size: 13.5px;
+                font-size: 13px;
                 color: var(--text-main);
-                line-height: 1.45;
+                line-height: 1.4;
             }}
             
             .border-top {{
                 border-top: 1px solid rgba(15, 23, 42, 0.04); /* 用超细浅分界实线，增加精细度 */
-                padding-top: 8px;
+                padding-top: 6px;
                 margin-top: 2px;
             }}
             
             /* 优化备注框的左侧边框颜色与背景透光感，改为精致的微蓝透光背景 */
             .remark-box {{
                 background: rgba(37, 99, 235, 0.03); /* 高级淡蓝透光纸张感 */
-                padding: 10px 12px;
+                padding: 6px 10px;
                 border-radius: var(--radius-sm);
                 border-left: 3px solid #60a5fa; 
                 margin-top: 4px;
-                font-size: 12.5px;
-                line-height: 1.6;
+                font-size: 12px;
+                line-height: 1.45;
             }}
             
             /* 徽章 */
@@ -1287,65 +1206,18 @@ def generate_card_html(df, stats, week_info):
                         </svg>
                     </span>
                     <div class="stat-info-block">
-                        <div class="stat-label">销售人数</div>
-                        <div class="stat-val">{stats['total_sales']}<span>人</span></div>
+                        <div class="stat-label">未申请销售</div>
+                        <div class="stat-val">{stats['unapplied_sales_count']}<span>人</span></div>
+                        <div class="stat-names" style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 3px; word-break: break-all; max-width: 130px;">{stats['unapplied_sales_names'] or '无'}</div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- 技术申请排行榜 -->
-        <div class="leaderboard-card-shell">
-            <div class="leaderboard-card">
-                <div class="leaderboard-column busy-col">
-                    <div class="leaderboard-header busy-header">
-                        <svg class="leaderboard-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                        </svg>
-                        技术申请最多 (Top Busy)
-                    </div>
-                    <div class="leaderboard-body">
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-tag tag-proj">{stats['top_busy'][0][1]}</span>
-                            <span class="leaderboard-name">{stats['top_busy'][0][0]}</span>
-                            <span class="leaderboard-value">{stats['top_busy'][0][2]}</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-tag tag-hour">{stats['top_busy'][1][1]}</span>
-                            <span class="leaderboard-name">{stats['top_busy'][1][0]}</span>
-                            <span class="leaderboard-value">{stats['top_busy'][1][2]}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="leaderboard-column free-col">
-                    <div class="leaderboard-header free-header">
-                        <svg class="leaderboard-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M8 12h8"/>
-                        </svg>
-                        技术申请最少 (Top Free)
-                    </div>
-                    <div class="leaderboard-body">
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-tag tag-proj">{stats['top_free'][0][1]}</span>
-                            <span class="leaderboard-name">{stats['top_free'][0][0]}</span>
-                            <span class="leaderboard-value">{stats['top_free'][0][2]}</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-tag tag-hour">{stats['top_free'][1][1]}</span>
-                            <span class="leaderboard-name">{stats['top_free'][1][0]}</span>
-                            <span class="leaderboard-value">{stats['top_free'][1][2]}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         
         {sections_html}
         
-        <div class="footer">
-            生成时间：{stats['generation_time']}
-        </div>
         <!-- 智能裁剪定位标记线 -->
         <div style="height: 2px; background-color: #0f172a; margin-top: 30px;"></div>
     </body>
@@ -1355,7 +1227,7 @@ def generate_card_html(df, stats, week_info):
 
 def calculate_stats(df):
     """
-    计算数据集统计指标，鲁棒求和工时，并筛选出最多和最少计划工作量的销售
+    计算数据集统计指标，包括计划总数、预计总工时、客户数以及未申请技术的销售人数
     """
     stats = {}
     stats['total_count'] = len(df)
@@ -1375,48 +1247,15 @@ def calculate_stats(df):
     
     stats['generation_time'] = datetime.datetime.now().strftime("%Y-%m-%d")
     
-    # 新增逻辑：筛选出计划工作量最多（技术申请最多）和最少（技术申请最少）的销售，考虑多人并列情况
+    # 江西办固定销售名单
     SALES_LIST = ["邓正春", "饶达琴", "段振华", "钱丽云", "詹文成", "伍斌", "吴刚", "张进", "贺欢"]
-    sales_projects = {name: 0 for name in SALES_LIST}
-    sales_hours = {name: 0.0 for name in SALES_LIST}
     
-    for _, row in df.iterrows():
-        name = str(row.get('销售', '')).strip()
-        if name in SALES_LIST:
-            sales_projects[name] += 1
-            try:
-                h_val = float(row.get('预计工时（h）', 0) or 0)
-            except (ValueError, TypeError):
-                h_val = 0.0
-            sales_hours[name] += h_val
-            
-    # 一、计算最多部分（技术申请最多）
-    # 1. 申请最多（可多人并列）
-    max_proj_val = max(sales_projects.values())
-    busy_proj_names = [k for k, v in sales_projects.items() if v == max_proj_val]
+    # 计算未申请技术的销售
+    applied_sales = set(str(x).strip() for x in df['销售'].dropna().unique() if str(x).strip())
+    unapplied_sales = [name for name in SALES_LIST if name not in applied_sales]
     
-    # 2. 工时最多（可多人并列）
-    max_hour_val = max(sales_hours.values())
-    busy_hour_names = [k for k, v in sales_hours.items() if v == max_hour_val]
-        
-    stats['top_busy'] = [
-        ("、".join(busy_proj_names), "项数最多", f"{max_proj_val}项"),
-        ("、".join(busy_hour_names), "工时最多", f"{max_hour_val:g}h")
-    ]
-    
-    # 二、计算最少部分（技术申请最少）
-    # 1. 申请最少（可多人并列）
-    min_proj_val = min(sales_projects.values())
-    free_proj_names = [k for k, v in sales_projects.items() if v == min_proj_val]
-    
-    # 2. 工时最少（可多人并列）
-    min_hour_val = min(sales_hours.values())
-    free_hour_names = [k for k, v in sales_hours.items() if v == min_hour_val]
-        
-    stats['top_free'] = [
-        ("、".join(free_proj_names), "项数最少", f"{min_proj_val}项"),
-        ("、".join(free_hour_names), "工时最少", f"{min_hour_val:g}h")
-    ]
+    stats['unapplied_sales_count'] = len(unapplied_sales)
+    stats['unapplied_sales_names'] = "、".join(unapplied_sales)
     
     return stats
 
@@ -1481,9 +1320,9 @@ def main():
     if df.empty:
         card_height = 800
     else:
-        # 增加了排行榜卡片（约 150px 高度），基础高度由 450 调至 600
-        estimated_height = 600 + (sales_count * 80) + (row_count * 180) + 300
-        card_height = max(1300, min(15000, estimated_height))
+        # 移过了排行榜卡片，且人名直接放入统计模块，每项计划卡片高度也经过压缩，基础高度和行高度分别调小至 430 和 135
+        estimated_height = 430 + (sales_count * 70) + (row_count * 135) + 300
+        card_height = max(1100, min(15000, estimated_height))
     
     print("正在调用 Chrome Headless 渲染图片...")
     print(f"正在渲染手机卡片流长图 (650x{card_height} 自动裁剪) -> {card_png_path}")
@@ -1491,7 +1330,7 @@ def main():
         chrome_path,
         "--headless",
         "--disable-gpu",
-        "--force-device-scale-factor=2",
+        "--force-device-scale-factor=3",  # 提升为 3 倍视网膜缩放因子，提供极高清晰度无损画质
         f"--screenshot={card_png_path}",
         f"--window-size=650,{card_height}",
         card_html_path
