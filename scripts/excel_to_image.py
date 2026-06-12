@@ -1137,16 +1137,16 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .field-label {{
-                font-size: 9.5px;
+                font-size: 11px;
                 color: var(--text-muted);
                 font-weight: 700;
-                letter-spacing: 0.08em; /* 增大字距展现高质感 */
+                letter-spacing: 0.08em; /* 保持字距展现高质感 */
                 text-transform: uppercase;
                 margin-bottom: 1px;
             }}
             
             .field-value {{
-                font-size: 12.5px;
+                font-size: 14px;
                 color: var(--text-main);
                 line-height: 1.4;
             }}
@@ -1164,17 +1164,17 @@ def generate_card_html(df, stats, week_info):
                 border-radius: var(--radius-sm);
                 border-left: 2.5px solid rgba(37, 99, 235, 0.35); /* 柔和莫兰迪蓝线 */
                 margin-top: 4px;
-                font-size: 11.5px;
+                font-size: 13px;
                 line-height: 1.45;
             }}
             
-            /* 徽章，通过微字号与字距加宽表现高级感 */
+            /* 徽章，通过字距加宽表现高级感 */
             .badge {{
                 display: inline-flex;
                 align-items: center;
                 padding: 3px 6px;
                 border-radius: var(--radius-sm);
-                font-size: 10px; /* 微字号 */
+                font-size: 11.5px;
                 font-weight: 600;
                 letter-spacing: 0.03em; /* 优化字距 */
                 width: fit-content;
