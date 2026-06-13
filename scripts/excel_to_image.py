@@ -14,6 +14,10 @@ import re
 # 设置中文字体首选和 CSS 样式
 CSS_VARIABLES = """
 :root {
+  /* 顶级字体栈变量：英文/数字首选Inter与苹果SF，中文首选苹方SC */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
   --primary: #0f172a;       /* slate-900 */
   --primary-light: #1e293b; /* slate-800 */
   --accent: #3b82f6;        /* blue-500 鲜活高亮蓝 */
@@ -64,6 +68,8 @@ CSS_VARIABLES = """
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "kern" 1;
+  text-shadow: 0 0 1px rgba(0,0,0,0.01); /* 消除部分无头浏览器渲染时的像素发虚 */
 }
 """
 
@@ -887,6 +893,10 @@ def generate_card_html(df, stats, week_info):
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 引入现代屏幕优化字体 Inter 与 JetBrains Mono 极速加载 -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
         <style>
             {CSS_VARIABLES}
             
@@ -900,7 +910,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             body {{
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
+                font-family: var(--font-sans);
                 background-color: var(--bg-main);
                 /* 引入重复弥散极光渐变，搭配超高级极淡蓝紫点阵背景，营造前沿数字画报视感 */
                 background-image: 
@@ -1000,10 +1010,10 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .header h1 {{
-                font-size: 19px;
+                font-size: 20px;
                 margin: 0;
-                font-weight: 850;
-                letter-spacing: 0.12em; 
+                font-weight: 800;
+                letter-spacing: 0.04em; 
                 color: var(--text-dark);
                 text-align: center;
                 background: linear-gradient(135deg, var(--text-dark), #1e293b);
@@ -1097,10 +1107,10 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .stat-val {{
-                font-size: 19px;
-                font-weight: 850;
+                font-size: 20px;
+                font-weight: 800;
                 color: var(--text-dark);
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                font-family: var(--font-mono);
                 line-height: 1.1;
             }}
             
@@ -1159,9 +1169,10 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .sales-title {{
-                font-size: 16.5px;
-                font-weight: 800;
+                font-size: 16px;
+                font-weight: 700;
                 color: var(--text-dark);
+                letter-spacing: 0.02em;
             }}
             
             .sales-meta {{
@@ -1221,7 +1232,7 @@ def generate_card_html(df, stats, week_info):
                 font-weight: 900;
                 font-style: italic; 
                 color: rgba(59, 130, 246, 0.045); 
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                font-family: var(--font-mono);
                 line-height: 1;
                 pointer-events: none;
                 z-index: 1;
@@ -1269,10 +1280,11 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .customer-name {{
-                font-size: 14.5px;
-                font-weight: 800;
+                font-size: 14px;
+                font-weight: 700;
                 color: var(--text-dark);
-                line-height: 1.35;
+                line-height: 1.4;
+                letter-spacing: 0.01em;
                 word-break: break-all;
             }}
             
@@ -1330,9 +1342,11 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .field-value {{
-                font-size: 14px;
+                font-size: 13.5px;
                 color: var(--text-main);
-                line-height: 1.4;
+                font-weight: 500; /* 加厚字重，确保截图不发虚 */
+                line-height: 1.45;
+                letter-spacing: 0.01em;
                 word-break: break-all;
             }}
             
@@ -1403,7 +1417,9 @@ def generate_card_html(df, stats, week_info):
                 color: #ea580c;
                 border: 1px solid rgba(249, 115, 22, 0.18);
                 border-radius: 12px; 
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                font-weight: 700;
             }}
             
             .badge-icon {{
@@ -1505,7 +1521,7 @@ def generate_card_html(df, stats, week_info):
                     </span>
                     <div class="stat-info-block">
                         <div class="stat-label">无技术安排销售</div>
-                        <div class="stat-val" style="font-size: { '14px' if not stats['unapplied_sales_names'] else '9.5px' }; line-height: 1.4; font-weight: 750; word-break: break-all; margin-top: 4px; color: { 'var(--text-muted)' if not stats['unapplied_sales_names'] else '#475569' }; letter-spacing: 0.02em;">{stats['unapplied_sales_names'] or '无'}</div>
+                        <div class="stat-val" style="font-size: { '14px' if not stats['unapplied_sales_names'] else '9.5px' }; line-height: 1.45; font-weight: { '700' if not stats['unapplied_sales_names'] else '600' }; word-break: break-all; margin-top: 4px; color: { 'var(--text-muted)' if not stats['unapplied_sales_names'] else '#475569' }; letter-spacing: 0.03em; font-family: var(--font-sans);">{stats['unapplied_sales_names'] or '无'}</div>
                     </div>
                 </div>
             </div>
