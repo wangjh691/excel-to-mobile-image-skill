@@ -480,7 +480,7 @@ def generate_table_html(df, stats):
             {CSS_VARIABLES}
             
             body {{
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
                 background-color: var(--bg-main);
                 color: var(--text-main);
                 margin: 0;
@@ -713,7 +713,7 @@ def generate_card_html(df, stats, week_info):
                     box-sizing: border-box;
                 }}
                 body {{
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+                     font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
                     background-color: var(--bg-main);
                     color: var(--text-main);
                     margin: 0;
@@ -892,7 +892,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             body {{
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
                 background-color: var(--bg-main);
                 /* 引入重复弥散极光渐变，搭配超高级极淡蓝紫点阵背景，营造前沿数字画报视感 */
                 background-image: 
