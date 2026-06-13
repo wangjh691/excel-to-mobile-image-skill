@@ -16,39 +16,39 @@ CSS_VARIABLES = """
 :root {
   --primary: #0f172a;       /* slate-900 */
   --primary-light: #1e293b; /* slate-800 */
-  --accent: #2563eb;        /* blue-600 */
-  --accent-light: #eff6ff;  /* blue-50 */
-  --bg-main: #f4f7fc;       /* 亮丽清爽的科技白底色 */
-  --bg-card: #ffffff;
-  --text-main: #475569;     /* slate-600 极致阅读体验，不显刺眼 */
+  --accent: #3b82f6;        /* blue-500 鲜活高亮蓝 */
+  --accent-light: rgba(59, 130, 246, 0.08);
+  --bg-main: #f5f8fc;       /* 晶莹明亮的清透白蓝 */
+  --bg-card: rgba(255, 255, 255, 0.82); /* 带有半透明毛玻璃感 */
+  --text-main: #334155;     /* slate-700 */
   --text-dark: #0f172a;     /* slate-900 */
   --text-muted: #64748b;    /* slate-500 */
-  --border-light: rgba(15, 23, 42, 0.06); /* 更隐蔽通透的轻虚边框 */
+  --border-light: rgba(59, 130, 246, 0.08); /* 微微带蓝的精致细线 */
   
-  /* 统一圆角黄金比例：大圆角 24px，中圆角 16px，小圆角 8px */
+  /* 统一圆角黄金比例 */
   --radius-lg: 24px;
   --radius-md: 16px;
   --radius-sm: 8px;
   
-  /* 莫兰迪低饱和度雅致颜色 */
-  --badge-yes-bg: #f0fdf4;   /* 极浅绿 */
-  --badge-yes-text: #166534;  /* 深绿 */
-  --badge-no-bg: #f8fafc;    /* 极浅灰 */
-  --badge-no-text: #475569;   /* 深灰 */
+  /* 活力爆棚的状态标签配色 */
+  --badge-yes-bg: rgba(59, 130, 246, 0.08);
+  --badge-yes-text: #2563eb;
+  --badge-no-bg: rgba(100, 116, 139, 0.05);
+  --badge-no-text: #64748b;
   
-  /* 兵种标签统一为冷色调拼图 */
-  --badge-af-bg: rgba(3, 105, 161, 0.04);   /* 安服 - 极低饱和度浅蓝 */
-  --badge-af-text: #0369a1;                 /* 安服 - 深蓝 */
-  --badge-xf-bg: rgba(13, 148, 136, 0.04);  /* 行销 - 极低饱和度浅青 */
-  --badge-xf-text: #0d9488;                 /* 行销 - 深青 */
-  --badge-jf-bg: rgba(79, 70, 229, 0.04);   /* 技服 - 极低饱和度浅靛 */
-  --badge-jf-text: #4f46e5;                 /* 技服 - 深靛 */
-  --badge-other-bg: #f8fafc;                /* 其他 */
-  --badge-other-text: #64748b;
+  /* 兵种标签统一为高对比高活力拼色 */
+  --badge-af-bg: rgba(16, 185, 129, 0.09);   /* 安服：薄荷绿 */
+  --badge-af-text: #059669;
+  --badge-xf-bg: rgba(249, 115, 22, 0.09);   /* 行销：明橙 */
+  --badge-xf-text: #ea580c;
+  --badge-jf-bg: rgba(99, 102, 241, 0.09);   /* 技服：极光靛紫 */
+  --badge-jf-text: #4f46e5;
+  --badge-other-bg: rgba(100, 116, 139, 0.08);
+  --badge-other-text: #475569;
   
-  /* 多层微偏靛蓝色相环境影 (Tinted soft ambient shadows) + 顶部高光边缘 (Bezel highlight) */
-  --shadow-card: 0 12px 30px -4px rgba(15, 23, 42, 0.03), 0 4px 12px -2px rgba(15, 23, 42, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --shadow-stats: 0 16px 32px -6px rgba(15, 23, 42, 0.04), 0 4px 8px -2px rgba(15, 23, 42, 0.02);
+  /* 晶莹环境立体投影 */
+  --shadow-card: 0 10px 30px -5px rgba(59, 130, 246, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.01);
+  --shadow-stats: 0 16px 36px -12px rgba(59, 130, 246, 0.09);
 }
 """
 
@@ -806,7 +806,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
 
-            /* 手机专属头部（浅色通透毛玻璃画报风，贯彻 Theme Lock 极简美学） */
+            /* 手机专属头部（浅色通透毛玻璃画报风，极其明朗） */
             .header {{
                 position: relative;
                 background: rgba(255, 255, 255, 0.85);
@@ -820,18 +820,18 @@ def generate_card_html(df, stats, week_info):
                 flex-direction: column;
                 align-items: center;
                 gap: 8px;
-                border: 1px solid rgba(15, 23, 42, 0.06);
-                box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.7);
+                box-shadow: var(--shadow-stats);
                 overflow: hidden;
             }}
             
-            /* 微静谧灰色几何斜网格装饰线，倾注画报级质感 */
+            /* 精致的微蓝点状装饰线，倾注画报级质感 */
             .header::before {{
                 content: "";
                 position: absolute;
                 inset: 0;
-                background-image: radial-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 0);
-                background-size: 14px 14px;
+                background-image: radial-gradient(rgba(59, 130, 246, 0.08) 1.5px, transparent 0);
+                background-size: 16px 16px;
                 pointer-events: none;
                 z-index: 1;
             }}
@@ -845,11 +845,12 @@ def generate_card_html(df, stats, week_info):
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 36px;
-                height: 36px;
-                background-color: rgba(37, 99, 235, 0.06);
+                width: 38px;
+                height: 38px;
+                background: linear-gradient(135deg, #3b82f6, #60a5fa);
                 border-radius: 50%;
-                color: var(--accent); /* 莫兰迪蓝色高亮 */
+                color: white; 
+                box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
             }}
             
             .header-icon {{
@@ -860,28 +861,34 @@ def generate_card_html(df, stats, week_info):
             .header h1 {{
                 font-size: 19px;
                 margin: 0;
-                font-weight: 800;
-                letter-spacing: 0.12em; /* 增大字距展现经典瑞士版式 */
+                font-weight: 850;
+                letter-spacing: 0.12em; 
                 color: var(--text-dark);
                 text-align: center;
+                background: linear-gradient(135deg, var(--text-dark), #1e293b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
             }}
             
-            /* 手机统计栏 Double-Bezel 双嵌套结构，集成微型 inline SVG 图标与独立数据信息块并列，打造成高端 Dashboard 组件 */
+            /* 手机统计栏 Double-Bezel 双嵌套结构，炫彩宝石图标，注入满满的活力感 */
             .stats-bar-shell {{
-                background-color: rgba(15, 23, 42, 0.04); /* 外层底座色 */
+                background-color: rgba(59, 130, 246, 0.04); 
                 border-radius: var(--radius-lg);
                 padding: 4px;
                 margin-bottom: 24px;
-                border: 1px solid rgba(15, 23, 42, 0.05);
+                border: 1px solid rgba(59, 130, 246, 0.08);
             }}
             
             .stats-bar {{
                 display: flex;
                 justify-content: space-between;
-                background-color: var(--bg-card); /* 内部核心纯白卡 */
+                background: rgba(255, 255, 255, 0.85); 
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
                 border-radius: calc(var(--radius-lg) - 4px);
                 padding: 14px 16px;
-                box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), var(--shadow-stats);
+                box-shadow: var(--shadow-stats);
+                border: 1px solid rgba(255, 255, 255, 0.6);
             }}
             
             .stat-item {{
@@ -889,42 +896,44 @@ def generate_card_html(df, stats, week_info):
                 flex: 1;
                 display: flex;
                 align-items: flex-start;
-                gap: 8px;
-                padding: 6px 0 5px 6px;
+                gap: 10px;
+                padding: 2px 0 6px 8px;
             }}
             
             .stat-item:not(:last-child) {{
                 border-right: 1px solid var(--border-light);
             }}
             
-            /* 底部精密 2px 莫兰迪彩色指示线条，极大强化仪表盘设计感 */
+            /* 底部 2.5px 高彩发光指示线条 */
             .stat-item::after {{
                 content: "";
                 position: absolute;
                 bottom: 0;
                 left: 12px;
                 right: 12px;
-                height: 2px;
-                border-radius: 1px;
+                height: 2.5px;
+                border-radius: 1.5px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             }}
-            .stat-item-1::after {{ background-color: var(--accent); }}
-            .stat-item-2::after {{ background-color: #ea580c; }}
-            .stat-item-3::after {{ background-color: #6366f1; }}
+            .stat-item-1::after {{ background-color: #3b82f6; }}
+            .stat-item-2::after {{ background-color: #f97316; }}
+            .stat-item-3::after {{ background-color: #a855f7; }}
             
             .stat-icon-wrapper {{
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 32px;
-                height: 32px;
-                border-radius: 8px;
-                background-color: var(--bg-main);
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                color: white;
                 flex-shrink: 0;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
             }}
             
-            .text-orange {{ color: #ea580c; background-color: #fff7ed; }}
-            .text-purple {{ color: #6366f1; background-color: #eef2ff; }}
-            .text-accent {{ color: var(--accent); background-color: var(--accent-light); }}
+            .text-accent {{ background: linear-gradient(135deg, #3b82f6, #60a5fa); }}
+            .text-orange {{ background: linear-gradient(135deg, #f97316, #facc15); }}
+            .text-purple {{ background: linear-gradient(135deg, #a855f7, #ec4899); }}
             
             .stat-icon {{
                 width: 16px;
@@ -938,7 +947,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .stat-label {{
-                font-size: 10px;
+                font-size: 10.5px;
                 color: var(--text-muted);
                 text-transform: uppercase;
                 font-weight: 700;
@@ -946,15 +955,15 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .stat-val {{
-                font-size: 18px;
-                font-weight: 800;
+                font-size: 19px;
+                font-weight: 850;
                 color: var(--text-dark);
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
                 line-height: 1.1;
             }}
             
             .stat-val span {{
-                font-size: 10px;
+                font-size: 11px;
                 font-weight: 600;
                 color: var(--text-muted);
                 margin-left: 2px;
@@ -978,7 +987,7 @@ def generate_card_html(df, stats, week_info):
             .sales-section-header::after {{
                 content: "";
                 flex-grow: 1;
-                border-bottom: 1px dashed rgba(15, 23, 42, 0.15);
+                border-bottom: 1px dashed rgba(59, 130, 246, 0.15);
                 margin: 0 16px;
                 height: 0;
             }}
@@ -988,54 +997,55 @@ def generate_card_html(df, stats, week_info):
                 align-items: center;
             }}
             
-            /* 分组头部 Avatar 质感提升 */
+            /* 销售人员 Avatar 升级为渐变潮流发光球 */
             .sales-avatar {{
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 24px;
-                height: 24px;
-                background-color: var(--accent-light);
+                width: 28px;
+                height: 28px;
+                background: linear-gradient(135deg, #3b82f6, #8b5cf6);
                 border-radius: 50%;
-                color: var(--accent); /* 高质感蓝色线稿头像圆圈 */
-                margin-right: 8px;
+                color: white; 
+                margin-right: 10px;
+                box-shadow: 0 3px 8px rgba(59, 130, 246, 0.15);
             }}
             
             .sales-avatar svg {{
-                width: 14px;
-                height: 14px;
+                width: 15px;
+                height: 15px;
             }}
             
             .sales-title {{
-                font-size: 16px;
-                font-weight: 700;
+                font-size: 16.5px;
+                font-weight: 800;
                 color: var(--text-dark);
             }}
             
             .sales-meta {{
                 display: flex;
                 gap: 6px;
-                order: 3; /* 将指标块排在线条右侧 */
+                order: 3; 
             }}
             
             .meta-badge {{
-                font-size: 12px;
-                background-color: #eff6ff; /* 浅蓝底 */
-                color: var(--accent);      /* 亮蓝字 */
-                padding: 4px 10px;
-                border-radius: 12px;
-                font-weight: 700;          /* 极粗字体 */
-                border: 1px solid rgba(37, 99, 235, 0.12);
-                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+                font-size: 11.5px;
+                background-color: rgba(59, 130, 246, 0.08); 
+                color: #2563eb;      
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-weight: 700;          
+                border: 1px solid rgba(59, 130, 246, 0.15);
+                box-shadow: 0 1px 2px rgba(59, 130, 246, 0.02);
             }}
             
             .hours-badge {{
-                background-color: #fff7ed; /* 浅橙底 */
-                color: #ea580c;            /* 橙色字 */
-                border-color: rgba(234, 88, 12, 0.12);
+                background-color: rgba(249, 115, 22, 0.08); 
+                color: #ea580c;            
+                border-color: rgba(249, 115, 22, 0.15);
             }}
             
-            /* 卡片定义 - 扁平悬浮，解决 box-in-box 嵌套感 */
+            /* 卡片定义 - 高保真毛玻璃透光看板 */
             .sales-cards {{
                 display: flex;
                 flex-direction: column;
@@ -1045,34 +1055,35 @@ def generate_card_html(df, stats, week_info):
             .plan-card {{
                 position: relative;
                 overflow: hidden;
-                background-color: var(--bg-card);
-                border: 1px solid rgba(15, 23, 42, 0.06); /* 更隐蔽细致的灰色外框线 */
-                border-radius: var(--radius-md); /* concentric 嵌套中圆角 */
-                padding: 12px 14px;
-                box-shadow: var(--shadow-card); /* 双重浮雕微阴影 */
+                background: rgba(255, 255, 255, 0.78);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.7); 
+                border-radius: var(--radius-md); 
+                padding: 14px 16px;
+                box-shadow: var(--shadow-card); 
             }}
             
-            /* 重点协作项目 Accent Card（高亮聚焦卡），打破上下纯长条的单调性，制造横向视线律动 */
             .plan-card-accent {{
-                background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%); /* 渐变融入极淡雅莫兰迪蓝 */
-                border: 1px solid rgba(37, 99, 235, 0.12); /* 降噪蓝色边框 */
-                box-shadow: 0 12px 30px -4px rgba(37, 99, 235, 0.04), 0 2px 6px -1px rgba(37, 99, 235, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+                background: rgba(255, 255, 255, 0.82);
+                border: 1px solid rgba(59, 130, 246, 0.2); 
+                box-shadow: 0 12px 30px -8px rgba(59, 130, 246, 0.08), 0 2px 8px -2px rgba(59, 130, 246, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
             }}
             
-            /* 高档艺术感背景超大字号序号水印，融入穿插斜体，极具排版呼吸感 */
+            /* 卡片右下角背景序号水印 - 加深且有色相 */
             .card-watermark {{
                 position: absolute;
                 bottom: 2px;
                 right: 14px;
-                font-size: 60px; /* 适度加大展现穿插 */
+                font-size: 60px; 
                 font-weight: 900;
-                font-style: italic; /* 倾斜体现动态感 */
-                color: rgba(15, 23, 42, 0.035); /* 稍微加深，更易于辨识 */
+                font-style: italic; 
+                color: rgba(59, 130, 246, 0.045); 
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
                 line-height: 1;
                 pointer-events: none;
                 z-index: 1;
-                transform: rotate(-3deg); /* 倾斜打破呆板 */
+                transform: rotate(-3deg); 
             }}
             
             .card-header {{
@@ -1091,21 +1102,21 @@ def generate_card_html(df, stats, week_info):
                 max-width: 70%;
             }}
             
-            /* 视觉聚焦锚点（微渐变蓝色竖条且带有圆角发光投影，极具高档质感） */
+            /* 视觉聚焦锚点（天蓝到薄荷绿的活力双色渐变，亮丽度直接爆表） */
             .customer-anchor {{
                 display: inline-block;
-                width: 3px;
+                width: 3.5px;
                 height: 14px;
-                background: linear-gradient(to bottom, var(--accent), #60a5fa);
-                border-radius: 1.5px;
+                background: linear-gradient(to bottom, #3b82f6, #10b981);
+                border-radius: 2px;
                 flex-shrink: 0;
-                box-shadow: 0 1px 3px rgba(37, 99, 235, 0.15);
+                box-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
             }}
             
             .plan-card-accent .customer-anchor {{
-                width: 4px; /* 高亮聚焦卡竖线加粗 */
-                background: linear-gradient(to bottom, #2563eb, #3b82f6);
-                box-shadow: 0 1px 5px rgba(37, 99, 235, 0.3); /* 发光增强 */
+                width: 4.5px; 
+                background: linear-gradient(to bottom, #8b5cf6, #ec4899); /* 高亮卡片使用紫粉色潮流渐变 */
+                box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); 
             }}
             
             .card-header-badges {{
@@ -1146,7 +1157,7 @@ def generate_card_html(df, stats, week_info):
                 font-size: 11px;
                 color: var(--text-muted);
                 font-weight: 700;
-                letter-spacing: 0.08em; /* 保持字距展现高质感 */
+                letter-spacing: 0.08em; 
                 text-transform: uppercase;
                 margin-bottom: 1px;
             }}
@@ -1158,71 +1169,71 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .border-top {{
-                border-top: 1px solid rgba(15, 23, 42, 0.04); /* 用超细浅分界实线，增加精细度 */
+                border-top: 1px solid rgba(59, 130, 246, 0.06); 
                 padding-top: 6px;
                 margin-top: 2px;
             }}
             
-            /* 优化备注框的左侧边框颜色与背景透光感，改为精致的微蓝透光背景 */
+            /* 升级为炫彩透光的备注栏，更亮丽有活力 */
             .remark-box {{
-                background: rgba(37, 99, 235, 0.02); /* 高级淡蓝透光纸张感 */
-                padding: 6px 10px;
+                background: rgba(59, 130, 246, 0.03); 
+                padding: 8px 12px;
                 border-radius: var(--radius-sm);
-                border-left: 2.5px solid rgba(37, 99, 235, 0.35); /* 柔和莫兰迪蓝线 */
-                margin-top: 4px;
+                border-left: 3px solid #3b82f6; 
+                margin-top: 6px;
                 font-size: 13px;
-                line-height: 1.45;
+                line-height: 1.5;
             }}
             
-            /* 徽章，通过字距加宽表现高级感 */
+            /* 徽章，加宽字距，色彩更加清新饱满 */
             .badge {{
                 display: inline-flex;
                 align-items: center;
-                padding: 3px 6px;
+                padding: 3px 8px;
                 border-radius: var(--radius-sm);
                 font-size: 11.5px;
-                font-weight: 600;
-                letter-spacing: 0.03em; /* 优化字距 */
+                font-weight: 700;
+                letter-spacing: 0.03em; 
                 width: fit-content;
                 line-height: 1;
             }}
             .badge-yes {{ 
                 background-color: var(--badge-yes-bg); 
                 color: var(--badge-yes-text); 
-                border: 1px solid rgba(22, 101, 52, 0.08);
+                border: 1px solid rgba(59, 130, 246, 0.15);
             }}
             .badge-no {{ 
                 background-color: var(--badge-no-bg); 
                 color: var(--badge-no-text); 
-                border: 1px solid rgba(71, 85, 105, 0.06);
+                border: 1px solid rgba(100, 116, 139, 0.1);
             }}
             .badge-af {{ 
                 background-color: var(--badge-af-bg); 
                 color: var(--badge-af-text); 
-                border: 1px solid rgba(3, 105, 161, 0.08);
+                border: 1px solid rgba(16, 185, 129, 0.18);
             }}
             .badge-xf {{ 
                 background-color: var(--badge-xf-bg); 
                 color: var(--badge-xf-text); 
-                border: 1px solid rgba(13, 148, 136, 0.08);
+                border: 1px solid rgba(249, 115, 22, 0.18);
             }}
             .badge-jf {{ 
                 background-color: var(--badge-jf-bg); 
                 color: var(--badge-jf-text); 
-                border: 1px solid rgba(79, 70, 229, 0.08);
+                border: 1px solid rgba(99, 102, 241, 0.18);
             }}
             .badge-other {{ 
                 background-color: var(--badge-other-bg); 
                 color: var(--badge-other-text); 
-                border: 1px solid rgba(100, 116, 139, 0.06);
+                border: 1px solid rgba(100, 116, 139, 0.1);
             }}
             
-            /* 工时 Badge 胶囊化 */
+            /* 工时胶囊：橙色高对比 */
             .badge-hours {{
-                background-color: #fff7ed;
+                background-color: rgba(249, 115, 22, 0.08);
                 color: #ea580c;
-                border: 1px solid rgba(234, 88, 12, 0.08);
-                border-radius: 12px; /* 胶囊化 */
+                border: 1px solid rgba(249, 115, 22, 0.18);
+                border-radius: 12px; 
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             }}
             
