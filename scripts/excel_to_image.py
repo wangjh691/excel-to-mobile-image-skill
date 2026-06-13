@@ -811,15 +811,15 @@ def generate_card_html(df, stats, week_info):
                 
                 <div class="card-body">
                     <div class="card-grid">
-                        <div class="grid-item">
+                        <div class="grid-item-type">
                             <span class="field-label">工作类型</span>
                             <span class="field-value font-semibold text-dark">{row['工作类型']}</span>
                         </div>
-                        <div class="grid-item" style="flex: 1.2;">
+                        <div class="grid-item-collab">
                             <span class="field-label">协作安排</span>
                             <span class="field-value">{collab_html}</span>
                         </div>
-                        <div class="grid-item">
+                        <div class="grid-item-time">
                             <span class="field-label">计划时间</span>
                             <span class="field-value text-dark">{row['计划时间']}</span>
                         </div>
@@ -1020,14 +1020,14 @@ def generate_card_html(df, stats, week_info):
                 width: 34px;
                 height: 34px;
                 border-radius: 10px;
-                color: white;
+                color: #ffffff !important;
                 flex-shrink: 0;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
             }}
             
-            .text-accent {{ background: linear-gradient(135deg, #3b82f6, #60a5fa); }}
-            .text-orange {{ background: linear-gradient(135deg, #f97316, #facc15); }}
-            .text-purple {{ background: linear-gradient(135deg, #a855f7, #ec4899); }}
+            .bg-blue-gradient {{ background: linear-gradient(135deg, #3b82f6, #60a5fa); }}
+            .bg-orange-gradient {{ background: linear-gradient(135deg, #f97316, #facc15); }}
+            .bg-purple-gradient {{ background: linear-gradient(135deg, #a855f7, #ec4899); }}
             
             .stat-icon {{
                 width: 16px;
@@ -1236,12 +1236,35 @@ def generate_card_html(df, stats, week_info):
             
             .card-grid {{
                 display: flex;
-                justify-content: space-between;
-                gap: 8px;
+                justify-content: flex-start;
+                gap: 16px;
             }}
             
             .grid-item {{
                 flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }}
+            
+            .grid-item-type {{
+                width: 90px;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }}
+            
+            .grid-item-collab {{
+                width: 105px;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }}
+            
+            .grid-item-time {{
+                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 gap: 2px;
@@ -1343,6 +1366,17 @@ def generate_card_html(df, stats, week_info):
             .font-bold {{ font-weight: 700; }}
             .font-mono {{ font-family: monospace; }}
             
+            .footer-end {{
+                text-align: center;
+                font-size: 11px;
+                color: var(--text-muted);
+                letter-spacing: 0.2em;
+                margin-top: 40px;
+                font-weight: 700;
+                position: relative;
+                z-index: 2;
+            }}
+            
             .footer {{
                 text-align: center;
                 margin-top: 30px;
@@ -1364,7 +1398,7 @@ def generate_card_html(df, stats, week_info):
         <div class="stats-bar-shell">
             <div class="stats-bar">
                 <div class="stat-item stat-item-1">
-                    <span class="stat-icon-wrapper text-accent">
+                    <span class="stat-icon-wrapper bg-blue-gradient">
                         <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 11 12 14 22 4"></polyline>
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
@@ -1376,7 +1410,7 @@ def generate_card_html(df, stats, week_info):
                     </div>
                 </div>
                 <div class="stat-item stat-item-2">
-                    <span class="stat-icon-wrapper text-orange">
+                    <span class="stat-icon-wrapper bg-orange-gradient">
                         <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <polyline points="12 6 12 12 16 14"></polyline>
@@ -1388,7 +1422,7 @@ def generate_card_html(df, stats, week_info):
                     </div>
                 </div>
                 <div class="stat-item stat-item-3">
-                    <span class="stat-icon-wrapper text-purple">
+                    <span class="stat-icon-wrapper bg-purple-gradient">
                         <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -1408,6 +1442,9 @@ def generate_card_html(df, stats, week_info):
 
         
         {sections_html}
+        
+        <!-- 底部 END 标识 -->
+        <div class="footer-end">- END -</div>
         
         <!-- 智能裁剪定位标记线 -->
         <div style="height: 2px; background-color: #0f172a; margin-top: 30px;"></div>
@@ -1516,7 +1553,7 @@ def main():
         card_height = max(1100, min(15000, estimated_height))
     
     print("正在调用 Chrome Headless 渲染图片...")
-    print(f"正在渲染手机卡片流长图 (650x{card_height} 自动裁剪) -> {card_png_path}")
+    print(f"正在渲染手机卡片流长图 (580x{card_height} 自动裁剪) -> {card_png_path}")
     from pathlib import Path
     import tempfile
     import shutil
@@ -1539,7 +1576,7 @@ def main():
         "--mute-audio",                      # 禁用音频
         "--force-device-scale-factor=3",     # 提升为 3 倍视网膜缩放因子，提供极高清晰度无损画质
         f"--screenshot={card_png_path}",
-        f"--window-size=650,{card_height}",
+        f"--window-size=580,{card_height}",
         f"--user-data-dir={chrome_profile_dir}",  # 隔离独立的临时配置目录，保证多实例和前后次运行绝对不锁死
         card_html_url
     ]
