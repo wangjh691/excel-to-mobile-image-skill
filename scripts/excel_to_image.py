@@ -54,7 +54,7 @@ CSS_VARIABLES = """
 
 def parse_args():
     parser = argparse.ArgumentParser(description="将工作计划 Excel 转换为精美的手机查看图片")
-    parser.add_argument("-i", "--input", default="(技术管理)技术申请.xlsx", help="输入的 Excel 文件路径（默认为 (技术管理)技术申请.xlsx）")
+    parser.add_argument("-i", "--input", default="/Users/wangjunhua/Desktop/00.工作资料/agi/工作区/工作安排/(技术管理)技术申请.xlsx", help="输入的 Excel 文件路径（默认为 /Users/wangjunhua/Desktop/00.工作资料/agi/工作区/工作安排/(技术管理)技术申请.xlsx）")
     parser.add_argument("-o", "--output-dir", help="输出文件夹路径（默认为输入文件同级目录）")
     return parser.parse_args()
 
