@@ -394,6 +394,9 @@ def crop_image_by_marker(image_path, marker_color=(15, 23, 42), tolerance=12):
         img = Image.open(image_path)
         width, height = img.size
         
+        # 获取快速像素加载通道，避免在 Python 中多次调用 getpixel 方法的开销，提速数十倍
+        pixels = img.load()
+        
         # 从下往上每隔 2 行扫描一次，大幅提升效率
         # 限制最大扫描深度（向上最深扫描至整体的 20% 高度），防止在超长空白时发生误判并减少计算量
         max_scan_limit = max(200, height // 5)
@@ -403,7 +406,7 @@ def crop_image_by_marker(image_path, marker_color=(15, 23, 42), tolerance=12):
             # 在图像中间 30% 范围内采样，确保效率并避开边缘渐变
             sample_points = range(int(width * 0.35), int(width * 0.65), 6)
             for x in sample_points:
-                pixel = img.getpixel((x, y))
+                pixel = pixels[x, y]
                 # 兼容 RGB 和 RGBA 格式
                 r, g, b = pixel[0], pixel[1], pixel[2]
                 if (abs(r - marker_color[0]) <= tolerance and 
@@ -1613,8 +1616,8 @@ def main():
     if df.empty:
         card_height = 800
     else:
-        # 移过了排行榜卡片，且人名直接放入统计模块，每项计划卡片高度也经过压缩，基础高度和行高度分别调小至 430 和 135
-        estimated_height = 430 + (sales_count * 70) + (row_count * 135) + 300
+        # 每一个计划卡片平均 CSS 高度约 130px，每个销售 header 约 45px，大幅降低高度冗余，提速 Chrome 渲染和图片 PNG 编码时间
+        estimated_height = 380 + (sales_count * 45) + (row_count * 132) + 120
         card_height = max(1100, min(15000, estimated_height))
     
     print("正在调用 Chrome Headless 渲染图片...")
@@ -1630,7 +1633,7 @@ def main():
     
     cmd_card = [
         chrome_path,
-        "--headless",
+        "--headless=new",                     # 启用 Chrome v109+ 新版极速 Headless 引擎，渲染与截图效率成倍提升
         "--disable-gpu",
         "--no-first-run",                   # 跳过首次运行欢迎引导，防止新建 Profile 时卡死
         "--no-default-browser-check",        # 跳过默认浏览器检测
@@ -1639,6 +1642,8 @@ def main():
         "--disable-translate",               # 禁用翻译组件
         "--disable-default-apps",            # 禁用默认应用
         "--mute-audio",                      # 禁用音频
+        "--disable-extensions",               # 禁用浏览器插件，缩短冷启动与进程加载时间
+        "--disable-dev-shm-usage",            # 禁用共享内存文件系统限制，消除 IO 阻塞提速
         "--force-device-scale-factor=3",     # 提升为 3 倍视网膜缩放因子，提供极高清晰度无损画质
         f"--screenshot={card_png_path}",
         f"--window-size=480,{card_height}",
