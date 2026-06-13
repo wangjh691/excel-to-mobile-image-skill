@@ -57,6 +57,14 @@ CSS_VARIABLES = """
   width: 0 !important;
   height: 0 !important;
 }
+
+/* 全局字体渲染平滑度优化与高级等宽数字防抖，使长图上的数字在纵向完美对齐，字形温润清爽 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+}
 """
 
 LOGO_SVG = """<svg id="_图层_2" data-name="图层 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 143.11 55.51">
