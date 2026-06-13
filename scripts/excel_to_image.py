@@ -1066,7 +1066,7 @@ def generate_card_html(df, stats, week_info):
                 font-size: 60px; /* 适度加大展现穿插 */
                 font-weight: 900;
                 font-style: italic; /* 倾斜体现动态感 */
-                color: rgba(15, 23, 42, 0.012); /* 极致清透，防止干扰正文阅读 */
+                color: rgba(15, 23, 42, 0.035); /* 稍微加深，更易于辨识 */
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
                 line-height: 1;
                 pointer-events: none;
