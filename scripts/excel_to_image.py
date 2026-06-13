@@ -50,6 +50,13 @@ CSS_VARIABLES = """
   --shadow-card: 0 10px 30px -5px rgba(59, 130, 246, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.01);
   --shadow-stats: 0 16px 36px -12px rgba(59, 130, 246, 0.09);
 }
+
+/* 隐藏滚动条，避免极长长图产生右侧垂直滚动条占用排版宽度并遮挡卡片边框 */
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
 """
 
 LOGO_SVG = """<svg id="_图层_2" data-name="图层 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 143.11 55.51">
