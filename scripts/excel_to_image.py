@@ -31,19 +31,19 @@ CSS_VARIABLES = """
   --radius-sm: 8px;
   
   /* 活力爆棚的状态标签配色 */
-  --badge-yes-bg: rgba(59, 130, 246, 0.08);
+  --badge-yes-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.03));
   --badge-yes-text: #2563eb;
-  --badge-no-bg: rgba(100, 116, 139, 0.05);
+  --badge-no-bg: linear-gradient(135deg, rgba(100, 116, 139, 0.05), rgba(71, 85, 105, 0.02));
   --badge-no-text: #64748b;
   
   /* 兵种标签统一为高对比高活力拼色 */
-  --badge-af-bg: rgba(16, 185, 129, 0.09);   /* 安服：薄荷绿 */
+  --badge-af-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(5, 150, 105, 0.03));   /* 安服：薄荷绿 */
   --badge-af-text: #059669;
-  --badge-xf-bg: rgba(249, 115, 22, 0.09);   /* 行销：明橙 */
+  --badge-xf-bg: linear-gradient(135deg, rgba(249, 115, 22, 0.09), rgba(234, 88, 12, 0.03));   /* 行销：明橙 */
   --badge-xf-text: #ea580c;
-  --badge-jf-bg: rgba(99, 102, 241, 0.09);   /* 技服：极光靛紫 */
+  --badge-jf-bg: linear-gradient(135deg, rgba(99, 102, 241, 0.09), rgba(79, 70, 229, 0.03));   /* 技服：极光靛紫 */
   --badge-jf-text: #4f46e5;
-  --badge-other-bg: rgba(100, 116, 139, 0.08);
+  --badge-other-bg: linear-gradient(135deg, rgba(100, 116, 139, 0.08), rgba(71, 85, 105, 0.03));
   --badge-other-text: #475569;
   
   /* 晶莹环境立体投影 */
@@ -891,15 +891,14 @@ def generate_card_html(df, stats, week_info):
             body {{
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
                 background-color: var(--bg-main);
-                /* 引入四重高饱和炫彩极光渐变，与高透白科技网格叠加，营造极富动感活力的现代画报风格 */
+                /* 引入重复弥散极光渐变，搭配超高级极淡蓝紫点阵背景，营造前沿数字画报视感 */
                 background-image: 
-                    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.22) 0%, transparent 65%),
-                    radial-gradient(circle at 100% 30%, rgba(249, 115, 22, 0.18) 0%, transparent 60%),
-                    radial-gradient(circle at 15% 75%, rgba(168, 85, 247, 0.18) 0%, transparent 55%),
-                    radial-gradient(circle at 85% 100%, rgba(16, 185, 129, 0.16) 0%, transparent 50%),
-                    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px), 
-                    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
-                background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+                    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 60%),
+                    radial-gradient(circle at 100% 25%, rgba(249, 115, 22, 0.15) 0%, transparent 55%),
+                    radial-gradient(circle at 10% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.13) 0%, transparent 45%),
+                    radial-gradient(rgba(59, 130, 246, 0.08) 1.5px, transparent 0);
+                background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
                 color: var(--text-main);
                 margin: 0;
                 padding: 24px 12px 30px 12px;
@@ -930,6 +929,15 @@ def generate_card_html(df, stats, week_info):
                 border: 1px solid rgba(255, 255, 255, 0.7);
                 box-shadow: var(--shadow-stats);
                 overflow: hidden;
+            }}
+            
+            .header-sub {{
+                font-size: 8.5px;
+                color: var(--text-muted);
+                letter-spacing: 0.18em;
+                font-weight: 750;
+                margin-top: -3px;
+                opacity: 0.85;
             }}
             
             .header-logo-wrapper {{
@@ -1178,19 +1186,19 @@ def generate_card_html(df, stats, week_info):
             .plan-card {{
                 position: relative;
                 overflow: hidden;
-                background: rgba(255, 255, 255, 0.78);
+                background: rgba(255, 255, 255, 0.8);
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.7); 
+                border: 1px solid rgba(255, 255, 255, 0.75); 
                 border-radius: var(--radius-md); 
-                padding: 14px 16px;
-                box-shadow: var(--shadow-card); 
+                padding: 15px 16px;
+                box-shadow: var(--shadow-card), inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
             }}
             
             .plan-card-accent {{
-                background: rgba(255, 255, 255, 0.82);
+                background: rgba(255, 255, 255, 0.84);
                 border: 1px solid rgba(59, 130, 246, 0.2); 
-                box-shadow: 0 12px 30px -8px rgba(59, 130, 246, 0.08), 0 2px 8px -2px rgba(59, 130, 246, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+                box-shadow: 0 12px 30px -8px rgba(59, 130, 246, 0.08), 0 2px 8px -2px rgba(59, 130, 246, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
             }}
             
             /* 卡片右下角背景序号水印 - 加深且有色相 */
@@ -1228,18 +1236,19 @@ def generate_card_html(df, stats, week_info):
             /* 视觉聚焦锚点（天蓝到薄荷绿的活力双色渐变，亮丽度直接爆表） */
             .customer-anchor {{
                 display: inline-block;
-                width: 3.5px;
-                height: 14px;
+                width: 4px;
+                height: 16px;
                 background: linear-gradient(to bottom, #3b82f6, #10b981);
-                border-radius: 2px;
+                border-radius: 2.5px;
                 flex-shrink: 0;
-                box-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
+                box-shadow: 0 1.5px 4px rgba(59, 130, 246, 0.25);
             }}
             
             .plan-card-accent .customer-anchor {{
-                width: 4.5px; 
+                width: 5px; 
+                height: 16px;
                 background: linear-gradient(to bottom, #8b5cf6, #ec4899); /* 高亮卡片使用紫粉色潮流渐变 */
-                box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); 
+                box-shadow: 0 1.5px 6px rgba(139, 92, 246, 0.45); 
             }}
             
             .card-header-badges {{
@@ -1409,6 +1418,26 @@ def generate_card_html(df, stats, week_info):
                 z-index: 2;
             }}
             
+            .unapplied-tag {{
+                display: inline-block;
+                background: rgba(139, 92, 246, 0.06); 
+                color: #7c3aed;
+                padding: 3px 7px;
+                border-radius: 6px;
+                font-size: 10.5px;
+                font-weight: 700;
+                border: 1px solid rgba(139, 92, 246, 0.15);
+                white-space: nowrap;
+                line-height: 1.25;
+                box-shadow: 0 1px 2px rgba(139, 92, 246, 0.02);
+            }}
+            .unapplied-empty {{
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--text-muted);
+                line-height: 1.4;
+            }}
+            
             .footer {{
                 text-align: center;
                 margin-top: 30px;
@@ -1425,6 +1454,7 @@ def generate_card_html(df, stats, week_info):
                 {LOGO_SVG}
             </div>
             <h1>江西办 {week_info} 技术安排</h1>
+            <div class="header-sub">TECHNICAL ARRANGEMENTS</div>
         </div>
         
         <div class="stats-bar-shell">
@@ -1464,7 +1494,7 @@ def generate_card_html(df, stats, week_info):
                     </span>
                     <div class="stat-info-block">
                         <div class="stat-label">未提交申请销售</div>
-                        <div class="stat-val" style="font-size: { '14px' if not stats['unapplied_sales_names'] else '10.5px' }; line-height: 1.35; font-weight: 700; word-break: break-all; margin-top: 3px; color: var(--text-dark);">{stats['unapplied_sales_names'] or '无'}</div>
+                        <div class="stat-val" style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start;">{stats['unapplied_sales_html']}</div>
                     </div>
                 </div>
             </div>
@@ -1515,6 +1545,10 @@ def calculate_stats(df):
     
     stats['unapplied_sales_count'] = len(unapplied_sales)
     stats['unapplied_sales_names'] = "、".join(unapplied_sales)
+    if unapplied_sales:
+        stats['unapplied_sales_html'] = "".join([f'<span class="unapplied-tag">{name}</span>' for name in unapplied_sales])
+    else:
+        stats['unapplied_sales_html'] = '<span class="unapplied-empty">无</span>'
     
     return stats
 
