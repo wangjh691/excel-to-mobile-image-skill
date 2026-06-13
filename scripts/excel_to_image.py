@@ -701,14 +701,24 @@ def generate_card_html(df, stats, week_info):
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
                 {CSS_VARIABLES}
+                html {{
+                    margin: 0;
+                    padding: 0;
+                    width: 480px;
+                    max-width: 480px;
+                    overflow-x: hidden;
+                    box-sizing: border-box;
+                }}
                 body {{
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
                     background-color: var(--bg-main);
                     color: var(--text-main);
                     margin: 0;
                     padding: 24px 12px 24px 12px;
-                    width: 100%;
+                    width: 480px;
+                    max-width: 480px;
                     box-sizing: border-box;
+                    overflow-x: hidden;
                 }}
                 .container {{
                     background-color: var(--bg-card);
@@ -869,6 +879,15 @@ def generate_card_html(df, stats, week_info):
         <style>
             {CSS_VARIABLES}
             
+            html {{
+                margin: 0;
+                padding: 0;
+                width: 480px;
+                max-width: 480px;
+                overflow-x: hidden;
+                box-sizing: border-box;
+            }}
+            
             body {{
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
                 background-color: var(--bg-main);
@@ -884,8 +903,10 @@ def generate_card_html(df, stats, week_info):
                 color: var(--text-main);
                 margin: 0;
                 padding: 24px 12px 30px 12px;
-                width: 100%;
+                width: 480px;
+                max-width: 480px;
                 box-sizing: border-box;
+                overflow-x: hidden;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 text-rendering: optimizeLegibility;
@@ -995,6 +1016,7 @@ def generate_card_html(df, stats, week_info):
             .stat-item {{
                 position: relative;
                 flex: 1;
+                min-width: 0;
                 display: flex;
                 align-items: flex-start;
                 gap: 10px;
@@ -1231,6 +1253,7 @@ def generate_card_html(df, stats, week_info):
                 font-weight: 800;
                 color: var(--text-dark);
                 line-height: 1.35;
+                word-break: break-all;
             }}
             
             .card-body {{
@@ -1290,6 +1313,7 @@ def generate_card_html(df, stats, week_info):
                 font-size: 14px;
                 color: var(--text-main);
                 line-height: 1.4;
+                word-break: break-all;
             }}
             
             .border-top {{
@@ -1307,6 +1331,7 @@ def generate_card_html(df, stats, week_info):
                 margin-top: 6px;
                 font-size: 13px;
                 line-height: 1.5;
+                word-break: break-all;
             }}
             
             /* 徽章，加宽字距，色彩更加清新饱满 */
@@ -1440,7 +1465,7 @@ def generate_card_html(df, stats, week_info):
                     <div class="stat-info-block">
                         <div class="stat-label">未提交申请销售</div>
                         <div class="stat-val">{stats['unapplied_sales_count']}<span>人</span></div>
-                        <div class="stat-names" style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 3px; word-break: break-all; max-width: 130px;">{stats['unapplied_sales_names'] or '无'}</div>
+                        <div class="stat-names" style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 3px; word-break: break-all; max-width: 85px;">{stats['unapplied_sales_names'] or '无'}</div>
                     </div>
                 </div>
             </div>
