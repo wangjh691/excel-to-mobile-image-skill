@@ -699,7 +699,7 @@ def generate_card_html(df, stats, week_info):
                     background-color: var(--bg-main);
                     color: var(--text-main);
                     margin: 0;
-                    padding: 75px 24px 24px 24px;
+                    padding: 24px 12px 24px 12px;
                     width: 100%;
                     box-sizing: border-box;
                 }}
@@ -876,7 +876,7 @@ def generate_card_html(df, stats, week_info):
                 background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
                 color: var(--text-main);
                 margin: 0;
-                padding: 75px 24px 30px 24px;
+                padding: 24px 12px 30px 12px;
                 width: 100%;
                 box-sizing: border-box;
                 -webkit-font-smoothing: antialiased;
