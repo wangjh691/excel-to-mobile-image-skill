@@ -14,8 +14,8 @@ import re
 # 设置中文字体首选和 CSS 样式
 CSS_VARIABLES = """
 :root {
-  /* 顶级字体栈变量：英文/数字首选Inter与苹果SF，中文首选苹方SC */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  /* 顶级字体栈变量：英文/数字首选Inter与苹果SF，中文首选云端思源黑体Noto Sans SC与本地苹方SC */
+  --font-sans: "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   --primary: #0f172a;       /* slate-900 */
@@ -490,11 +490,15 @@ def generate_table_html(df, stats):
     <html lang="zh-CN">
     <head>
         <meta charset="utf-8">
+        <!-- 引入 Noto Sans SC 和 Inter 屏幕精美字体 -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
         <style>
             {CSS_VARIABLES}
             
             body {{
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
+                font-family: var(--font-sans);
                 background-color: var(--bg-main);
                 color: var(--text-main);
                 margin: 0;
@@ -896,7 +900,7 @@ def generate_card_html(df, stats, week_info):
         <!-- 引入现代屏幕优化字体 Inter 与 JetBrains Mono 极速加载 -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
         <style>
             {CSS_VARIABLES}
             
