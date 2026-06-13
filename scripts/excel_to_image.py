@@ -1553,7 +1553,7 @@ def main():
         card_height = max(1100, min(15000, estimated_height))
     
     print("正在调用 Chrome Headless 渲染图片...")
-    print(f"正在渲染手机卡片流长图 (580x{card_height} 自动裁剪) -> {card_png_path}")
+    print(f"正在渲染手机卡片流长图 (480x{card_height} 自动裁剪) -> {card_png_path}")
     from pathlib import Path
     import tempfile
     import shutil
@@ -1576,7 +1576,7 @@ def main():
         "--mute-audio",                      # 禁用音频
         "--force-device-scale-factor=3",     # 提升为 3 倍视网膜缩放因子，提供极高清晰度无损画质
         f"--screenshot={card_png_path}",
-        f"--window-size=580,{card_height}",
+        f"--window-size=480,{card_height}",
         f"--user-data-dir={chrome_profile_dir}",  # 隔离独立的临时配置目录，保证多实例和前后次运行绝对不锁死
         card_html_url
     ]
