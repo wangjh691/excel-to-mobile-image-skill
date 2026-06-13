@@ -18,7 +18,7 @@ CSS_VARIABLES = """
   --primary-light: #1e293b; /* slate-800 */
   --accent: #2563eb;        /* blue-600 */
   --accent-light: #eff6ff;  /* blue-50 */
-  --bg-main: #f8fafc;       /* slate-50 极高雅淡雅底色 */
+  --bg-main: #f4f7fc;       /* 亮丽清爽的科技白底色 */
   --bg-card: #ffffff;
   --text-main: #475569;     /* slate-600 极致阅读体验，不显刺眼 */
   --text-dark: #0f172a;     /* slate-900 */
@@ -787,13 +787,14 @@ def generate_card_html(df, stats, week_info):
             body {{
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
                 background-color: var(--bg-main);
-                /* 引入双重径向弥散极光渐变，叠合 40px 手稿网格底纹，呈现极致通透且高品质的画报质感 */
+                /* 引入三重炫彩弥散极光渐变（天蓝、阳光橙、亮紫），叠合科技淡蓝细网格底纹，展现极佳的活力与明亮画报感 */
                 background-image: 
-                    radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.02) 0%, transparent 40%),
-                    radial-gradient(circle at 90% 80%, rgba(234, 88, 12, 0.015) 0%, transparent 40%),
-                    linear-gradient(rgba(15, 23, 42, 0.012) 1px, transparent 1px), 
-                    linear-gradient(90deg, rgba(15, 23, 42, 0.012) 1px, transparent 1px);
-                background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+                    radial-gradient(circle at 5% 5%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+                    radial-gradient(circle at 95% 50%, rgba(249, 115, 22, 0.06) 0%, transparent 55%),
+                    radial-gradient(circle at 30% 95%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                    linear-gradient(rgba(37, 99, 235, 0.018) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(37, 99, 235, 0.018) 1px, transparent 1px);
+                background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
                 color: var(--text-main);
                 margin: 0;
                 padding: 75px 24px 30px 24px;
