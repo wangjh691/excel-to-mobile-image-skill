@@ -639,7 +639,7 @@ def generate_table_html(df, stats):
         <div class="container">
             <div class="dashboard">
                 <div class="card">
-                    <div class="card-label">计划总数</div>
+                    <div class="card-label">申请总数</div>
                     <div class="card-value">{stats['total_count']}<span>项</span></div>
                 </div>
                 <div class="card">
@@ -860,7 +860,7 @@ def generate_card_html(df, stats, week_info):
                     <span class="sales-title">{sales_name}</span>
                 </div>
                 <div class="sales-meta">
-                    <span class="meta-badge">{len(group)} 项计划</span>
+                    <span class="meta-badge">{len(group)} 项申请</span>
                     <span class="meta-badge hours-badge">{sales_hours:g}小时工时</span>
                 </div>
             </div>
@@ -1437,7 +1437,7 @@ def generate_card_html(df, stats, week_info):
                         </svg>
                     </span>
                     <div class="stat-info-block">
-                        <div class="stat-label">计划数</div>
+                        <div class="stat-label">申请数</div>
                         <div class="stat-val">{stats['total_count']}<span>项</span></div>
                     </div>
                 </div>
