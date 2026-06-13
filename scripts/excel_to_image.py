@@ -566,7 +566,7 @@ def generate_table_html(df, stats):
                     <div class="card-value">{stats['total_customers']}<span>家</span></div>
                 </div>
                 <div class="card">
-                    <div class="card-label">未申请销售</div>
+                    <div class="card-label">未提交申请销售</div>
                     <div class="card-value">{stats['unapplied_sales_count']}<span>人</span></div>
                     <div class="card-sub" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.2; word-break: break-all;">名单：{stats['unapplied_sales_names'] or '无'}</div>
                 </div>
@@ -1296,7 +1296,7 @@ def generate_card_html(df, stats, week_info):
                         </svg>
                     </span>
                     <div class="stat-info-block">
-                        <div class="stat-label">未申请销售</div>
+                        <div class="stat-label">未提交申请销售</div>
                         <div class="stat-val">{stats['unapplied_sales_count']}<span>人</span></div>
                         <div class="stat-names" style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 3px; word-break: break-all; max-width: 130px;">{stats['unapplied_sales_names'] or '无'}</div>
                     </div>
