@@ -822,7 +822,7 @@ def generate_card_html(df, stats, week_info):
                     </div>
                     <div class="card-header-badges">
                         <span class="badge {type_cls}">{row['兵种']}</span>
-                        <span class="badge badge-hours">{row['预计工时（h）']}h</span>
+                        <span class="badge badge-hours">{row['预计工时（h）']}小时</span>
                     </div>
                 </div>
                 
@@ -861,7 +861,7 @@ def generate_card_html(df, stats, week_info):
                 </div>
                 <div class="sales-meta">
                     <span class="meta-badge">{len(group)} 项计划</span>
-                    <span class="meta-badge hours-badge">{sales_hours:g}h 工时</span>
+                    <span class="meta-badge hours-badge">{sales_hours:g}小时工时</span>
                 </div>
             </div>
             <div class="sales-cards">
@@ -1450,7 +1450,7 @@ def generate_card_html(df, stats, week_info):
                     </span>
                     <div class="stat-info-block">
                         <div class="stat-label">预计工时</div>
-                        <div class="stat-val">{stats['total_hours']}<span>h</span></div>
+                        <div class="stat-val">{stats['total_hours']}<span>小时</span></div>
                     </div>
                 </div>
                 <div class="stat-item stat-item-3">
@@ -1464,8 +1464,7 @@ def generate_card_html(df, stats, week_info):
                     </span>
                     <div class="stat-info-block">
                         <div class="stat-label">未提交申请销售</div>
-                        <div class="stat-val">{stats['unapplied_sales_count']}<span>人</span></div>
-                        <div class="stat-names" style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 3px; word-break: break-all; max-width: 85px;">{stats['unapplied_sales_names'] or '无'}</div>
+                        <div class="stat-val" style="font-size: 13px; line-height: 1.4; font-weight: 700; word-break: break-all; margin-top: 2px; color: var(--text-dark);">{stats['unapplied_sales_names'] or '无'}</div>
                     </div>
                 </div>
             </div>
