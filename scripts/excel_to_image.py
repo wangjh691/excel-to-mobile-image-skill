@@ -18,7 +18,7 @@ CSS_VARIABLES = """
   --primary-light: #1e293b; /* slate-800 */
   --accent: #3b82f6;        /* blue-500 鲜活高亮蓝 */
   --accent-light: rgba(59, 130, 246, 0.08);
-  --bg-main: #f5f8fc;       /* 晶莹明亮的清透白蓝 */
+  --bg-main: #ebf3fe;       /* 清澈亮丽的天蓝白色 */
   --bg-card: rgba(255, 255, 255, 0.82); /* 带有半透明毛玻璃感 */
   --text-main: #334155;     /* slate-700 */
   --text-dark: #0f172a;     /* slate-900 */
@@ -787,14 +787,15 @@ def generate_card_html(df, stats, week_info):
             body {{
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
                 background-color: var(--bg-main);
-                /* 引入三重炫彩弥散极光渐变（天蓝、阳光橙、亮紫），叠合科技淡蓝细网格底纹，展现极佳的活力与明亮画报感 */
+                /* 引入四重高饱和炫彩极光渐变，与高透白科技网格叠加，营造极富动感活力的现代画报风格 */
                 background-image: 
-                    radial-gradient(circle at 5% 5%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
-                    radial-gradient(circle at 95% 50%, rgba(249, 115, 22, 0.06) 0%, transparent 55%),
-                    radial-gradient(circle at 30% 95%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
-                    linear-gradient(rgba(37, 99, 235, 0.018) 1px, transparent 1px), 
-                    linear-gradient(90deg, rgba(37, 99, 235, 0.018) 1px, transparent 1px);
-                background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+                    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.22) 0%, transparent 65%),
+                    radial-gradient(circle at 100% 30%, rgba(249, 115, 22, 0.18) 0%, transparent 60%),
+                    radial-gradient(circle at 15% 75%, rgba(168, 85, 247, 0.18) 0%, transparent 55%),
+                    radial-gradient(circle at 85% 100%, rgba(16, 185, 129, 0.16) 0%, transparent 50%),
+                    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+                background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
                 color: var(--text-main);
                 margin: 0;
                 padding: 75px 24px 30px 24px;
