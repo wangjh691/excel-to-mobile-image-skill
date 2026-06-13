@@ -66,6 +66,11 @@ description: 用于将工作计划等复杂 Excel 表格进行数据清洗、销
 1. **定位输入文件**：确认输入的原始 Excel 路径。
 2. **确认脚本位置**：该技能的脚本位于 `scripts/excel_to_image.py`。
 3. **在终端执行转换命令**：
+   可以直接在项目根目录运行以读取默认的 `(技术管理)技术申请.xlsx`：
+   ```bash
+   python3 scripts/excel_to_image.py
+   ```
+   或者手动指定输入文件路径：
    ```bash
    python3 scripts/excel_to_image.py --input "/path/to/input.xlsx"
    ```

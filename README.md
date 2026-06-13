@@ -34,14 +34,20 @@ pip install pandas openpyxl Pillow pypinyin
 
 ## 📖 使用指南
 
-在项目根目录下执行以下命令：
+在项目根目录下执行以下命令（默认会读取根目录下的 `(技术管理)技术申请.xlsx`）：
 
 ```bash
-python3 scripts/excel_to_image.py --input 工作计划.xlsx
+python3 scripts/excel_to_image.py
+```
+
+您也可以手动指定其他输入文件：
+
+```bash
+python3 scripts/excel_to_image.py --input "/path/to/your_file.xlsx"
 ```
 
 ### 参数说明
-- `-i, --input` (*必填*)：输入的原始工作计划 Excel 文件路径。
+- `-i, --input` (*选填*)：输入的 Excel 文件路径，默认值为 `(技术管理)技术申请.xlsx`。
 - `-o, --output-dir` (*选填*)：生成的产物输出目录，默认与输入文件处于同级目录。
 
 ### 生成产物

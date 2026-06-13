@@ -54,7 +54,7 @@ CSS_VARIABLES = """
 
 def parse_args():
     parser = argparse.ArgumentParser(description="将工作计划 Excel 转换为精美的手机查看图片")
-    parser.add_argument("-i", "--input", required=True, help="输入的 Excel 文件路径")
+    parser.add_argument("-i", "--input", default="(技术管理)技术申请.xlsx", help="输入的 Excel 文件路径（默认为 (技术管理)技术申请.xlsx）")
     parser.add_argument("-o", "--output-dir", help="输出文件夹路径（默认为输入文件同级目录）")
     return parser.parse_args()
 
@@ -180,6 +180,11 @@ def clean_and_prepare_data(input_path):
         sys.exit(1)
         
     df = pd.read_excel(input_path)
+    
+    # 筛选：该周周一日期是当前时间之后的
+    if '该周周一日期' in df.columns:
+        temp_dates = pd.to_datetime(df['该周周一日期'], errors='coerce')
+        df = df[temp_dates > pd.Timestamp.now()].copy()
     
     # 1. 排序（按销售）
     # 渐进式拼音排序：优先尝试使用 pypinyin 进行完美汉字拼音排序；未安装时 fallback 到 GB18030 字符字节排序
