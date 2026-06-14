@@ -920,7 +920,7 @@ def generate_card_html(df, stats, week_info):
                 background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
                 color: var(--text-main);
                 margin: 0;
-                padding: 24px 12px 30px 12px;
+                padding: 10px 12px 30px 12px;
                 width: 480px;
                 max-width: 480px;
                 box-sizing: border-box;
@@ -931,7 +931,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
 
-            /* 手机专属头部（浅色通透毛玻璃画报风，极其明朗） */
+            /* 手机专属头部（浅色通透毛玻璃画报风，极其明朗） - 已深度优化高度使其更为紧凑 */
             .header {{
                 position: relative;
                 background: rgba(255, 255, 255, 0.85);
@@ -939,12 +939,12 @@ def generate_card_html(df, stats, week_info):
                 -webkit-backdrop-filter: blur(20px);
                 color: var(--text-dark);
                 border-radius: var(--radius-lg);
-                padding: 24px 20px;
-                margin-bottom: 20px;
+                padding: 12px 20px;
+                margin-bottom: 12px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 8px;
+                gap: 2px;
                 border: 1px solid rgba(255, 255, 255, 0.7);
                 box-shadow: var(--shadow-stats);
                 overflow: hidden;
@@ -955,7 +955,7 @@ def generate_card_html(df, stats, week_info):
                 color: var(--text-muted);
                 letter-spacing: 0.18em;
                 font-weight: 750;
-                margin-top: -3px;
+                margin-top: -2px;
                 opacity: 0.85;
             }}
             
@@ -963,14 +963,14 @@ def generate_card_html(df, stats, week_info):
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: 12px;
+                margin-bottom: 0px;
                 width: 100%;
                 z-index: 2;
                 position: relative;
             }}
             
             .header-logo-wrapper svg {{
-                height: 28px;
+                height: 22px;
                 width: auto;
             }}
             
