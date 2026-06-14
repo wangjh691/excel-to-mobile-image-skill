@@ -860,7 +860,7 @@ def generate_card_html(df, stats, week_info):
                         <div class="stack-avatar"></div>
                         <div class="stack-avatar"></div>
                     </div>
-                    {row['支持人员']}支持
+                    {row['支持人员']}
                 </span>
                 """
             else:
@@ -948,7 +948,7 @@ def generate_card_html(df, stats, week_info):
                     <span class="sales-title">{sales_name}</span>
                 </div>
                 <div class="sales-meta">
-                    <span class="meta-badge">{len(group)} 项申请</span>
+                    <span class="meta-badge">{len(group)} 项任务</span>
                     <span class="meta-badge hours-badge">{sales_hours:g}小时工时</span>
                 </div>
             </div>
