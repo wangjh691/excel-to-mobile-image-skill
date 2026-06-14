@@ -951,7 +951,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .header-sub {{
-                font-size: 8.5px;
+                font-size: 7px;
                 color: var(--text-muted);
                 letter-spacing: 0.18em;
                 font-weight: 750;
@@ -1479,6 +1479,7 @@ def generate_card_html(df, stats, week_info):
                 {LOGO_SVG}
             </div>
             <h1>江西办 {week_info} 技术安排</h1>
+            <div class="header-sub">TECHNICAL ARRANGEMENTS</div>
         </div>
         
         <div class="stats-bar-shell">
