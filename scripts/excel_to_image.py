@@ -920,7 +920,7 @@ def generate_card_html(df, stats, week_info):
                 background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
                 color: var(--text-main);
                 margin: 0;
-                padding: 10px 12px 30px 12px;
+                padding: 18px 12px 30px 12px;
                 width: 480px;
                 max-width: 480px;
                 box-sizing: border-box;
@@ -939,7 +939,7 @@ def generate_card_html(df, stats, week_info):
                 -webkit-backdrop-filter: blur(20px);
                 color: var(--text-dark);
                 border-radius: var(--radius-lg);
-                padding: 12px 20px;
+                padding: 16px 20px 12px 20px;
                 margin-bottom: 12px;
                 display: flex;
                 flex-direction: column;
@@ -1479,7 +1479,6 @@ def generate_card_html(df, stats, week_info):
                 {LOGO_SVG}
             </div>
             <h1>江西办 {week_info} 技术安排</h1>
-            <div class="header-sub">TECHNICAL ARRANGEMENTS</div>
         </div>
         
         <div class="stats-bar-shell">
