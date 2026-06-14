@@ -1065,6 +1065,11 @@ def generate_card_html(df, stats, week_info):
             .stat-item-2::after {{ background-color: #f97316; box-shadow: 0 2px 8px rgba(249, 115, 22, 0.65); }}
             .stat-item-3::after {{ background-color: #a855f7; box-shadow: 0 2px 8px rgba(168, 85, 247, 0.65); }}
             
+            /* 细分统计项宽度，第一二列收缩，为第三列预留宽敞空间以防标题和顿号姓名折行 */
+            .stat-item-1 {{ flex: 0.82 !important; }}
+            .stat-item-2 {{ flex: 0.85 !important; }}
+            .stat-item-3 {{ flex: 1.33 !important; }}
+            
             .stat-icon-wrapper {{
                 display: inline-flex;
                 align-items: center;
@@ -1093,11 +1098,12 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .stat-label {{
-                font-size: 10.5px;
+                font-size: 10px;
                 color: var(--text-muted);
                 text-transform: uppercase;
                 font-weight: 700;
-                letter-spacing: 0.06em;
+                letter-spacing: 0.03em;
+                white-space: nowrap; /* 强制单行呈现，不折行 */
             }}
             
             .stat-val {{
