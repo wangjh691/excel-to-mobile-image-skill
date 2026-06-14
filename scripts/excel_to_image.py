@@ -14,9 +14,9 @@ import re
 # 设置中文字体首选和 CSS 样式
 CSS_VARIABLES = """
 :root {
-  /* 顶级字体栈变量：英文/数字首选Inter与苹果SF，中文首选云端思源黑体Noto Sans SC与本地苹方SC */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  /* 顶级字体栈变量：全量强制首选本地苹方SC字体，确保长图整体字形统一与高清度 */
+  --font-sans: "PingFang SC", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "PingFang SC", -apple-system, BlinkMacSystemFont, monospace;
 
   --primary: #0f172a;       /* slate-900 */
   --primary-light: #1e293b; /* slate-800 */
@@ -623,7 +623,7 @@ def generate_table_html(df, stats):
             .text-center {{ text-align: center; }}
             .text-right {{ text-align: right; }}
             .font-semibold {{ font-weight: 600; }}
-            .font-mono {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }}
+            .font-mono {{ font-family: "PingFang SC", -apple-system, sans-serif; }}
             .text-dark {{ color: var(--text-dark); }}
             .text-muted {{ color: var(--text-muted); }}
             
@@ -728,7 +728,7 @@ def generate_card_html(df, stats, week_info):
                     box-sizing: border-box;
                 }}
                 body {{
-                     font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
+                     font-family: "PingFang SC", sans-serif;
                     background-color: var(--bg-main);
                     color: var(--text-main);
                     margin: 0;
@@ -908,7 +908,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             body {{
-                font-family: var(--font-sans);
+                font-family: "PingFang SC", sans-serif;
                 background-color: var(--bg-main);
                 /* 引入重复弥散极光渐变，搭配超高级极淡蓝紫点阵背景，营造前沿数字画报视感 */
                 background-image: 
@@ -1108,7 +1108,7 @@ def generate_card_html(df, stats, week_info):
                 font-size: 20px;
                 font-weight: 800;
                 color: var(--text-dark);
-                font-family: var(--font-mono);
+                font-family: "PingFang SC", sans-serif;
                 line-height: 1.1;
             }}
             
@@ -1230,7 +1230,7 @@ def generate_card_html(df, stats, week_info):
                 font-weight: 900;
                 font-style: italic; 
                 color: rgba(59, 130, 246, 0.045); 
-                font-family: var(--font-mono);
+                font-family: "PingFang SC", sans-serif;
                 line-height: 1;
                 pointer-events: none;
                 z-index: 1;
@@ -1415,7 +1415,7 @@ def generate_card_html(df, stats, week_info):
                 color: #ea580c;
                 border: 1px solid rgba(249, 115, 22, 0.18);
                 border-radius: 12px; 
-                font-family: var(--font-mono);
+                font-family: "PingFang SC", sans-serif;
                 font-size: 11px;
                 font-weight: 700;
             }}
@@ -1430,7 +1430,7 @@ def generate_card_html(df, stats, week_info):
             
             .text-accent {{ color: var(--accent); }}
             .font-bold {{ font-weight: 700; }}
-            .font-mono {{ font-family: monospace; }}
+            .font-mono {{ font-family: "PingFang SC", -apple-system, sans-serif; }}
             
             .footer-end {{
                 text-align: center;
