@@ -304,8 +304,8 @@ def clean_and_prepare_data(input_path):
     # 3. 填充 NaN 为空字符串，预计工时如果为 NaN 填 0 或空，保持数据干净
     df = df.fillna('')
     
-    # 4. 新增序号字段并放置在第一列
-    df.insert(0, '序号', range(1, len(df) + 1))
+    # 4. 新增序号字段并放置在第一列，格式化为两位数
+    df.insert(0, '序号', [f"{i:02d}" for i in range(1, len(df) + 1)])
     
     # 5. 保留指定字段并按顺序排列
     target_columns = ['序号', '所在月周', '销售', '兵种', '客户名称', '工作类型', '是否支持', '支持人员', '计划时间', '预计工时（h）', '备注']
@@ -705,6 +705,23 @@ def generate_table_html(df, stats):
     """
     return html
 
+def get_sales_avatar_style(name):
+    """
+    根据销售人员姓名哈希计算出固定的莫兰迪色系渐变背景，使头像千人千面且保持视觉和谐
+    """
+    palettes = [
+        ("linear-gradient(135deg, #a78bfa, #c084fc)", "#ffffff"), # 薰衣草紫
+        ("linear-gradient(135deg, #fb923c, #ffb703)", "#ffffff"), # 暖金橙
+        ("linear-gradient(135deg, #60a5fa, #3b82f6)", "#ffffff"), # 经典海蓝
+        ("linear-gradient(135deg, #34d399, #059669)", "#ffffff"), # 翡翠绿
+        ("linear-gradient(135deg, #f472b6, #fb7185)", "#ffffff"), # 珊瑚粉
+        ("linear-gradient(135deg, #2ec4b6, #0f172a)", "#ffffff"), # 青碧绿
+    ]
+    char_sum = sum(ord(c) for c in str(name))
+    idx = char_sum % len(palettes)
+    bg, fg = palettes[idx]
+    return f"background: {bg}; color: {fg}; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);"
+
 def generate_card_html(df, stats, week_info):
     """
     生成针对手机屏幕（竖屏）的精美卡片流 HTML 字符串，贯彻 taste-skill 殿堂级通透设计标准
@@ -786,6 +803,7 @@ def generate_card_html(df, stats, week_info):
     sections_html = ""
     for sales_name, group in grouped:
         sales_char = str(sales_name)[0] if sales_name else "销"
+        avatar_style = get_sales_avatar_style(sales_name)
         sales_hours = 0
         try:
             sales_hours = pd.to_numeric(group['预计工时（h）'], errors='coerce').fillna(0).sum()
@@ -832,11 +850,11 @@ def generate_card_html(df, stats, week_info):
             if is_support:
                 collab_html = f"""
                 <span class="badge badge-yes">
-                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                    {row['支持人员']} 支持
+                    <div class="avatar-stack">
+                        <div class="stack-avatar"></div>
+                        <div class="stack-avatar"></div>
+                    </div>
+                    {row['支持人员']}支持
                 </span>
                 """
             else:
@@ -852,7 +870,7 @@ def generate_card_html(df, stats, week_info):
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>备注
                     </span>
-                    <span class="field-value text-muted">{row['备注']}</span>
+                    <span class="field-value text-muted remark-value">{row['备注']}</span>
                 </div>
                 """
             
@@ -863,6 +881,7 @@ def generate_card_html(df, stats, week_info):
             <div class="{card_cls}">
                 <!-- 殿堂级艺术感背景超大字号序号水印，绝对定位在右下角，立体穿插 -->
                 <div class="card-watermark">{row['序号']}</div>
+                { '<div class="pulse-indicator"><span class="pulse-dot"></span></div>' if is_support else '' }
                 
                 <div class="card-header">
                     <!-- 左侧添加微渐变 Focus Anchor（视觉落脚蓝色聚焦条） -->
@@ -919,7 +938,7 @@ def generate_card_html(df, stats, week_info):
         <div class="sales-section">
             <div class="sales-section-header">
                 <div class="sales-info">
-                    <span class="sales-avatar">{sales_char}</span>
+                    <span class="sales-avatar" style="{avatar_style}">{sales_char}</span>
                     <span class="sales-title">{sales_name}</span>
                 </div>
                 <div class="sales-meta">
@@ -954,14 +973,13 @@ def generate_card_html(df, stats, week_info):
             
             body {{
                 font-family: "PingFang SC", sans-serif;
-                background-color: var(--bg-main);
                 /* 引入重复弥散极光渐变，搭配超高级极淡蓝紫点阵背景，营造前沿数字画报视感 */
                 background-image: 
                     radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 60%),
                     radial-gradient(circle at 100% 25%, rgba(249, 115, 22, 0.15) 0%, transparent 55%),
                     radial-gradient(circle at 10% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
                     radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.13) 0%, transparent 45%),
-                    radial-gradient(rgba(59, 130, 246, 0.05) 1.1px, transparent 0);
+                    radial-gradient(rgba(59, 130, 246, 0.035) 1.2px, transparent 0);
                 background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 20px 20px;
                 color: var(--text-main);
                 margin: 0;
@@ -976,7 +994,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
 
-            /* 手机专属头部（浅色通透毛玻璃画报风，极其明朗） - 已深度优化高度使其更为紧凑 */
+            /* 手机专属头部（浅色通透毛玻璃画报风，极其明朗） */
             .header {{
                 position: relative;
                 background: rgba(255, 255, 255, 0.85);
@@ -993,6 +1011,31 @@ def generate_card_html(df, stats, week_info):
                 border: 1px solid rgba(255, 255, 255, 0.7);
                 box-shadow: var(--shadow-stats);
                 overflow: hidden;
+            }}
+            
+            /* 对角扫光 Shimmer 效果 */
+            .header::after {{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -150%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.25) 30%,
+                    rgba(255, 255, 255, 0.45) 50%,
+                    rgba(255, 255, 255, 0.25) 70%,
+                    transparent
+                );
+                transform: skewX(-25deg);
+                animation: shimmer 6s infinite ease-in-out;
+            }}
+            @keyframes shimmer {{
+                0% {{ left: -150%; }}
+                50% {{ left: -150%; }}
+                100% {{ left: 150%; }}
             }}
             
             .header-sub {{
@@ -1155,12 +1198,14 @@ def generate_card_html(df, stats, week_info):
                 white-space: nowrap; /* 强制单行呈现，不折行 */
             }}
             
+            /* 字重层级对比排版 */
             .stat-val {{
-                font-size: 20px;
-                font-weight: 800;
+                font-size: 24px;
+                font-weight: 900;
                 color: var(--text-dark);
-                font-family: "PingFang SC", sans-serif;
-                line-height: 1.1;
+                font-family: var(--font-sans);
+                line-height: 1;
+                letter-spacing: -0.02em;
             }}
             
             .stat-item-1 .stat-val, .stat-item-2 .stat-val {{
@@ -1168,10 +1213,11 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .stat-val span {{
-                font-size: 11px;
-                font-weight: 600;
+                font-size: 10px;
+                font-weight: 500;
                 color: var(--text-muted);
                 margin-left: 2px;
+                letter-spacing: 0;
             }}
             
             /* 分组模块 */
@@ -1210,14 +1256,12 @@ def generate_card_html(df, stats, week_info):
                 justify-content: center;
                 width: 28px;
                 height: 28px;
-                background: linear-gradient(135deg, #3b82f6, #8b5cf6);
                 border-radius: 50%;
-                color: white; 
                 margin-right: 10px;
-                box-shadow: 0 3px 8px rgba(59, 130, 246, 0.15);
                 font-size: 13px;
                 font-weight: 800;
                 line-height: 1;
+                transition: transform 0.2s ease;
             }}
             
             .sales-title {{
@@ -1265,31 +1309,113 @@ def generate_card_html(df, stats, week_info):
                 -webkit-backdrop-filter: blur(16px);
                 border: 1px solid rgba(255, 255, 255, 0.75); 
                 border-radius: var(--radius-md); 
-                padding: 15px 16px;
-                box-shadow: 0 12px 28px -4px rgba(59, 130, 246, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.02), inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
+                padding: 16px 16px;
+                box-shadow: 0 12px 28px -4px rgba(59, 130, 246, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.015), inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
+                z-index: 2;
             }}
             
             .plan-card-accent {{
                 background: rgba(255, 255, 255, 0.84);
-                border: 1px solid rgba(59, 130, 246, 0.2); 
-                box-shadow: 0 16px 36px -8px rgba(59, 130, 246, 0.09), 0 4px 16px -2px rgba(59, 130, 246, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
+                border: 1px solid rgba(59, 130, 246, 0.18); 
+                box-shadow: 0 16px 36px -8px rgba(59, 130, 246, 0.08), 0 4px 16px -2px rgba(59, 130, 246, 0.03), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
             }}
             
-            /* 卡片右下角背景序号水印 - 引入叠印混合模式，完美融合背景色彩 */
+            /* 霓虹发光边 */
+            .plan-card::before {{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2.5px;
+                background: linear-gradient(to right, #3b82f6, #10b981);
+                z-index: 3;
+            }}
+            
+            .plan-card-accent::before {{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(to right, #8b5cf6, #ec4899);
+                box-shadow: 0 1px 6px rgba(139, 92, 246, 0.4);
+                z-index: 3;
+            }}
+            
+            /* 隐约的精密网格点线肌理 */
+            .plan-card::after {{
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-image: 
+                    linear-gradient(rgba(59, 130, 246, 0.012) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(59, 130, 246, 0.012) 1px, transparent 1px);
+                background-size: 24px 24px;
+                pointer-events: none;
+                z-index: 0;
+            }}
+            
+            /* 卡片右下角背景序号水印 - 优雅的艺术空心轮廓字 */
             .card-watermark {{
                 position: absolute;
-                bottom: -2px;
-                right: 12px;
-                font-size: 68px; 
+                bottom: -6px;
+                right: 14px;
+                font-size: 80px; 
                 font-weight: 900;
                 font-style: italic; 
-                color: rgba(59, 130, 246, 0.07); 
-                font-family: "PingFang SC", sans-serif;
+                color: transparent;
+                -webkit-text-stroke: 1.5px rgba(59, 130, 246, 0.12);
+                font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
                 line-height: 1;
                 pointer-events: none;
                 z-index: 1;
-                transform: rotate(-5deg); 
+                transform: rotate(-3deg); 
                 mix-blend-mode: multiply;
+            }}
+            
+            /* 呼吸灯脉冲微光源 */
+            .pulse-indicator {{
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5;
+            }}
+            
+            .pulse-dot {{
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: #8b5cf6;
+                box-shadow: 0 0 8px #8b5cf6;
+                position: relative;
+            }}
+            
+            .pulse-dot::after {{
+                content: "";
+                position: absolute;
+                width: 14px;
+                height: 14px;
+                border: 1px solid rgba(139, 92, 246, 0.5);
+                border-radius: 50%;
+                top: -5px;
+                left: -5px;
+                animation: pulse-ring 1.8s infinite cubic-bezier(0.25, 0, 0, 1);
+            }}
+            
+            @keyframes pulse-ring {{
+                0% {{
+                    transform: scale(0.6);
+                    opacity: 1;
+                }}
+                100% {{
+                    transform: scale(1.6);
+                    opacity: 0;
+                }}
             }}
             
             .card-header {{
@@ -1319,11 +1445,8 @@ def generate_card_html(df, stats, week_info):
                 box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
             }}
             
-            .plan-card-accent .customer-anchor {{
-                width: 5px; 
-                height: 16px;
-                background: linear-gradient(to bottom, #8b5cf6, #ec4899); /* 高亮卡片使用紫粉色潮流渐变，发光更立体 */
-                box-shadow: 0 2px 10px rgba(139, 92, 246, 0.7); 
+            .plan-card-accent {{
+                border-left-width: 1px; /* 移除侧边粗线条，统一使用顶部霓虹切角边 */
             }}
             
             .card-header-badges {{
@@ -1412,38 +1535,52 @@ def generate_card_html(df, stats, week_info):
             /* 升级为炫彩透光的备注栏，引入磨砂渐变和圆角悬浮竖条 */
             .remark-box {{
                 position: relative;
-                background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(139, 92, 246, 0.015)); 
-                padding: 8px 12px 8px 16px;
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(139, 92, 246, 0.01)); 
+                padding: 10px 14px 10px 18px;
                 border-radius: var(--radius-sm);
-                margin-top: 8px;
+                margin-top: 10px;
                 font-size: 12.5px;
-                line-height: 1.5;
+                line-height: 1.6;
                 word-break: break-all;
                 border: 1px solid rgba(59, 130, 246, 0.04);
+                z-index: 2;
             }}
             
             .remark-box::before {{
                 content: "";
                 position: absolute;
-                top: 8px;
-                bottom: 8px;
+                top: 10px;
+                bottom: 10px;
                 left: 6px;
                 width: 3px;
                 background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
                 border-radius: 1.5px;
             }}
             
+            .remark-value::first-letter {{
+                font-size: 16px;
+                font-weight: 800;
+                color: var(--text-dark);
+                float: left;
+                margin-right: 2px;
+                line-height: 1;
+            }}
+            
             /* 徽章，加宽字距，色彩更加清新饱满 */
             .badge {{
                 display: inline-flex;
                 align-items: center;
-                padding: 3px 8px;
-                border-radius: var(--radius-sm);
-                font-size: 11.5px;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 11px;
                 font-weight: 700;
-                letter-spacing: 0.03em; 
+                letter-spacing: 0.02em; 
                 width: fit-content;
                 line-height: 1;
+                /* 晶莹亚克力质感 */
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
             }}
             .badge-yes {{ 
                 background-color: var(--badge-yes-bg); 
