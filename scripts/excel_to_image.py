@@ -285,18 +285,24 @@ def clean_and_prepare_data(input_path):
         temp_dates = pd.to_datetime(df['该周周一日期'], errors='coerce')
         df = df[temp_dates > pd.Timestamp.now()].copy()
     
-    # 1. 排序（按销售）
-    # 渐进式拼音排序：优先尝试使用 pypinyin 进行完美汉字拼音排序；未安装时 fallback 到 GB18030 字符字节排序
+    # 1. 排序（按销售申请任务数降序、姓名拼音升序排序，确保 Excel 和手机长图序号是完全一致且顺序递增的）
     if '销售' in df.columns:
+        sales_counts = df['销售'].value_counts().to_dict()
+        df['_task_count'] = df['销售'].map(lambda x: sales_counts.get(x, 0))
+        
         try:
             from pypinyin import pinyin, Style
             def get_pinyin_key(name):
                 p_list = pinyin(str(name), style=Style.NORMAL)
                 return "".join([w[0] for w in p_list]).lower()
-            df = df.sort_values(by='销售', key=lambda col: col.map(get_pinyin_key))
         except ImportError:
-            # fallback
-            df = df.sort_values(by='销售', key=lambda col: col.map(lambda x: str(x).encode('gb18030', errors='ignore')))
+            def get_pinyin_key(name):
+                return str(name).encode('gb18030', errors='ignore')
+                
+        df['_pinyin'] = df['销售'].map(get_pinyin_key)
+        # 按任务数降序、姓名拼音升序排序
+        df = df.sort_values(by=['_task_count', '_pinyin'], ascending=[False, True])
+        df = df.drop(columns=['_task_count', '_pinyin'])
         df = df.reset_index(drop=True)
     else:
         df['销售'] = ''
@@ -826,8 +832,26 @@ def generate_card_html(df, stats, week_info):
             sales_hours = 0
         sales_data_list.append((s_name, group, task_count, sales_hours))
         
-    # 按任务数（第2项）降序排序
-    sales_data_list.sort(key=lambda x: x[2], reverse=True)
+    # 确保排序规则与 df 完全一致，让卡片上的序号顺次递增：
+    # 1. 有任务的销售：根据他们在 df 中首次出现的索引进行排序（此时 df 已排好序：任务数降序、拼音升序）
+    # 2. 0 任务的销售：排在后面，他们之间按拼音升序排序
+    try:
+        from pypinyin import pinyin, Style
+        def get_pinyin_key(name):
+            p_list = pinyin(str(name), style=Style.NORMAL)
+            return "".join([w[0] for w in p_list]).lower()
+    except ImportError:
+        def get_pinyin_key(name):
+            return str(name).encode('gb18030', errors='ignore')
+
+    def get_sales_sort_key(item):
+        s_name = item[0]
+        if s_name in df['销售'].values:
+            return (0, df[df['销售'] == s_name].index[0])
+        else:
+            return (1, get_pinyin_key(s_name))
+
+    sales_data_list.sort(key=get_sales_sort_key)
     
     sections_html = ""
     male_color_counter = 0
