@@ -887,7 +887,6 @@ def generate_card_html(df, stats, week_info):
             <div class="{card_cls}">
                 <!-- 殿堂级艺术感背景超大字号序号水印，绝对定位在右下角，立体穿插 -->
                 <div class="card-watermark">{row['序号']}</div>
-                { '<div class="pulse-indicator"><span class="pulse-dot"></span></div>' if is_support else '' }
                 
                 <div class="card-header">
                     <!-- 左侧添加微渐变 Focus Anchor（视觉落脚蓝色聚焦条） -->
