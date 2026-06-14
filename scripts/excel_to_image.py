@@ -1114,6 +1114,10 @@ def generate_card_html(df, stats, week_info):
                 line-height: 1.1;
             }}
             
+            .stat-item-1 .stat-val, .stat-item-2 .stat-val {{
+                white-space: nowrap; /* 强制数值与单位在单行呈现，防折行 */
+            }}
+            
             .stat-val span {{
                 font-size: 11px;
                 font-weight: 600;
