@@ -1710,48 +1710,7 @@ def generate_card_html(df, stats, week_info):
             <div class="header-sub">TECHNICAL ARRANGEMENTS</div>
         </div>
         
-        <div class="stats-bar-shell">
-            <div class="stats-bar">
-                <div class="stat-item stat-item-1">
-                    <span class="stat-icon-wrapper bg-blue-gradient">
-                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 11 12 14 22 4"></polyline>
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                        </svg>
-                    </span>
-                    <div class="stat-info-block">
-                        <div class="stat-label">申请数</div>
-                        <div class="stat-val">{stats['total_count']}<span>项</span></div>
-                    </div>
-                </div>
-                <div class="stat-item stat-item-2">
-                    <span class="stat-icon-wrapper bg-orange-gradient">
-                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                    </span>
-                    <div class="stat-info-block">
-                        <div class="stat-label">预计工时</div>
-                        <div class="stat-val">{stats['total_hours']}<span>小时</span></div>
-                    </div>
-                </div>
-                <div class="stat-item stat-item-3">
-                    <span class="stat-icon-wrapper bg-purple-gradient">
-                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </span>
-                    <div class="stat-info-block">
-                        <div class="stat-label">无技术安排销售</div>
-                        <div class="stat-val" style="font-size: { '14px' if not stats['unapplied_sales_names'] else '9.5px' }; line-height: 1.45; font-weight: { '700' if not stats['unapplied_sales_names'] else '600' }; word-break: break-all; margin-top: 4px; color: { 'var(--text-muted)' if not stats['unapplied_sales_names'] else '#475569' }; letter-spacing: 0.03em; font-family: var(--font-sans);">{stats['unapplied_sales_names'] or '无'}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         
 
         
@@ -1864,8 +1823,8 @@ def main():
         card_height = 800
     else:
         # 高精度动态高度计算：
-        # 1. 顶部基础区域（header约120px + stats-bar约160px + spacing约100px）
-        total_height = 380
+        # 1. 顶部基础区域（header约120px + spacing约100px）
+        total_height = 220
         
         # 2. 销售分组头部（每一个销售 header 占约 45px）
         sales_count = df['销售'].nunique() if '销售' in df.columns else 0
