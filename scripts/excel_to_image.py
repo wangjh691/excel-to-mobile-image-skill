@@ -707,18 +707,23 @@ def generate_table_html(df, stats):
 
 def get_sales_avatar_style(name, idx=0):
     """
-    根据销售人员的排列顺序依次轮流分派莫兰迪色系渐变，包含紫、橙、蓝、绿、粉、青六色，彻底防同色相邻。
+    根据销售人员的排列顺序依次轮流分派莫兰迪色系渐变，钱丽云作为江西办唯一女销售固定粉色渐变，其余男销售按次序循环分派，彻底防同色相邻。
     """
-    palettes = [
-        ("linear-gradient(135deg, #a78bfa, #c084fc)", "#ffffff"), # 薰衣草紫
-        ("linear-gradient(135deg, #fb923c, #ffb703)", "#ffffff"), # 暖金橙
-        ("linear-gradient(135deg, #60a5fa, #3b82f6)", "#ffffff"), # 经典海蓝
-        ("linear-gradient(135deg, #34d399, #059669)", "#ffffff"), # 翡翠绿
-        ("linear-gradient(135deg, #f472b6, #fb7185)", "#ffffff"), # 珊瑚粉
-        ("linear-gradient(135deg, #2ec4b6, #0f172a)", "#ffffff"), # 青碧绿
-    ]
-    color_idx = idx % len(palettes)
-    bg, fg = palettes[color_idx]
+    name_str = str(name).strip()
+    if name_str == "钱丽云":
+        # 钱丽云（女性销售）固定为温馨优雅的珊瑚粉渐变
+        bg, fg = ("linear-gradient(135deg, #f472b6, #fb7185)", "#ffffff")
+    else:
+        # 其他男性销售在其余经典莫兰迪配色中按排列次序循环分配（排除粉色）
+        palettes = [
+            ("linear-gradient(135deg, #a78bfa, #c084fc)", "#ffffff"), # 薰衣草紫
+            ("linear-gradient(135deg, #fb923c, #ffb703)", "#ffffff"), # 暖金橙
+            ("linear-gradient(135deg, #60a5fa, #3b82f6)", "#ffffff"), # 经典海蓝
+            ("linear-gradient(135deg, #34d399, #059669)", "#ffffff"), # 翡翠绿
+            ("linear-gradient(135deg, #2ec4b6, #0f172a)", "#ffffff"), # 青碧绿
+        ]
+        color_idx = idx % len(palettes)
+        bg, fg = palettes[color_idx]
         
     return f"background: {bg}; color: {fg}; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);"
 
@@ -825,9 +830,15 @@ def generate_card_html(df, stats, week_info):
     sales_data_list.sort(key=lambda x: x[2], reverse=True)
     
     sections_html = ""
-    for idx, (sales_name, group, task_count, sales_hours) in enumerate(sales_data_list):
+    male_color_counter = 0
+    for sales_name, group, task_count, sales_hours in sales_data_list:
         sales_char = str(sales_name)[0] if sales_name else "销"
-        avatar_style = get_sales_avatar_style(sales_name, idx=idx)
+        name_str = str(sales_name).strip()
+        if name_str == "钱丽云":
+            avatar_style = get_sales_avatar_style(sales_name)
+        else:
+            avatar_style = get_sales_avatar_style(sales_name, idx=male_color_counter)
+            male_color_counter += 1
             
         group_cards_html = ""
         if group.empty:
