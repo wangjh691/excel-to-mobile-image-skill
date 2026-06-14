@@ -2018,11 +2018,17 @@ def main():
     except Exception:
         pass
         
+    # 仅保留手机卡片流.jpg，在此清理作为中间产物的 PNG 图片
+    try:
+        if os.path.exists(card_png_path):
+            os.remove(card_png_path)
+    except Exception as e:
+        print(f"清理临时 PNG 失败: {e}")
+        
     print("\n转换全部完成！已成功生成以下文件：")
     print(f"1. [整理后的 Excel] {excel_out}")
-    print(f"2. [手机卡片流长图(PNG无损)] {card_png_path}")
     if has_jpg:
-        print(f"3. [手机卡片流长图(JPG分享)] {card_jpg_path} (已优化体积，防社交软件二次压缩发虚)")
+        print(f"2. [手机卡片流长图(JPG分享)] {card_jpg_path} (已优化体积，防社交软件二次压缩发虚)")
 
 if __name__ == "__main__":
     main()
