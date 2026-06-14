@@ -1047,27 +1047,27 @@ def generate_card_html(df, stats, week_info):
                 display: flex;
                 align-items: flex-start;
                 gap: 10px;
-                padding: 2px 0 6px 8px;
+                padding: 6px 8px 8px 8px;
+                background: rgba(255, 255, 255, 0.45);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: var(--radius-sm);
+                margin: 0 3px;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
             }}
             
-            .stat-item:not(:last-child) {{
-                border-right: 1px solid var(--border-light);
-            }}
-            
-            /* 底部 2.5px 高彩发光指示线条 */
+            /* 底部 2.5px 高彩发光指示线条，引入霓虹阴影增强发光感 */
             .stat-item::after {{
                 content: "";
                 position: absolute;
                 bottom: 0;
-                left: 12px;
-                right: 12px;
+                left: 10px;
+                right: 10px;
                 height: 2.5px;
                 border-radius: 1.5px;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             }}
-            .stat-item-1::after {{ background-color: #3b82f6; }}
-            .stat-item-2::after {{ background-color: #f97316; }}
-            .stat-item-3::after {{ background-color: #a855f7; }}
+            .stat-item-1::after {{ background-color: #3b82f6; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.65); }}
+            .stat-item-2::after {{ background-color: #f97316; box-shadow: 0 2px 8px rgba(249, 115, 22, 0.65); }}
+            .stat-item-3::after {{ background-color: #a855f7; box-shadow: 0 2px 8px rgba(168, 85, 247, 0.65); }}
             
             .stat-icon-wrapper {{
                 display: inline-flex;
@@ -1221,20 +1221,21 @@ def generate_card_html(df, stats, week_info):
                 box-shadow: 0 12px 30px -8px rgba(59, 130, 246, 0.08), 0 2px 8px -2px rgba(59, 130, 246, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
             }}
             
-            /* 卡片右下角背景序号水印 - 加深且有色相 */
+            /* 卡片右下角背景序号水印 - 引入叠印混合模式，完美融合背景色彩 */
             .card-watermark {{
                 position: absolute;
-                bottom: 2px;
-                right: 14px;
-                font-size: 60px; 
+                bottom: -2px;
+                right: 12px;
+                font-size: 68px; 
                 font-weight: 900;
                 font-style: italic; 
-                color: rgba(59, 130, 246, 0.045); 
+                color: rgba(59, 130, 246, 0.07); 
                 font-family: "PingFang SC", sans-serif;
                 line-height: 1;
                 pointer-events: none;
                 z-index: 1;
-                transform: rotate(-3deg); 
+                transform: rotate(-5deg); 
+                mix-blend-mode: multiply;
             }}
             
             .card-header {{
@@ -1253,7 +1254,7 @@ def generate_card_html(df, stats, week_info):
                 max-width: 70%;
             }}
             
-            /* 视觉聚焦锚点（天蓝到薄荷绿的活力双色渐变，亮丽度直接爆表） */
+            /* 视觉聚焦锚点（天蓝到薄荷绿的活力双色渐变，带霓虹微投影） */
             .customer-anchor {{
                 display: inline-block;
                 width: 4px;
@@ -1261,14 +1262,14 @@ def generate_card_html(df, stats, week_info):
                 background: linear-gradient(to bottom, #3b82f6, #10b981);
                 border-radius: 2.5px;
                 flex-shrink: 0;
-                box-shadow: 0 1.5px 4px rgba(59, 130, 246, 0.25);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
             }}
             
             .plan-card-accent .customer-anchor {{
                 width: 5px; 
                 height: 16px;
-                background: linear-gradient(to bottom, #8b5cf6, #ec4899); /* 高亮卡片使用紫粉色潮流渐变 */
-                box-shadow: 0 1.5px 6px rgba(139, 92, 246, 0.45); 
+                background: linear-gradient(to bottom, #8b5cf6, #ec4899); /* 高亮卡片使用紫粉色潮流渐变，发光更立体 */
+                box-shadow: 0 2px 10px rgba(139, 92, 246, 0.7); 
             }}
             
             .card-header-badges {{
@@ -1281,8 +1282,8 @@ def generate_card_html(df, stats, week_info):
                 font-size: 14px;
                 font-weight: 700;
                 color: var(--text-dark);
-                line-height: 1.4;
-                letter-spacing: 0.01em;
+                line-height: 1.45;
+                letter-spacing: 0.02em;
                 word-break: break-all;
             }}
             
@@ -1340,11 +1341,11 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .field-value {{
-                font-size: 13.5px;
+                font-size: 13px;
                 color: var(--text-main);
                 font-weight: 500; /* 加厚字重，确保截图不发虚 */
-                line-height: 1.45;
-                letter-spacing: 0.01em;
+                line-height: 1.5;
+                letter-spacing: 0.02em;
                 word-break: break-all;
             }}
             
@@ -1354,16 +1355,28 @@ def generate_card_html(df, stats, week_info):
                 margin-top: 2px;
             }}
             
-            /* 升级为炫彩透光的备注栏，更亮丽有活力 */
+            /* 升级为炫彩透光的备注栏，引入磨砂渐变和圆角悬浮竖条 */
             .remark-box {{
-                background: rgba(59, 130, 246, 0.03); 
-                padding: 8px 12px;
+                position: relative;
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(139, 92, 246, 0.015)); 
+                padding: 8px 12px 8px 16px;
                 border-radius: var(--radius-sm);
-                border-left: 3px solid #3b82f6; 
-                margin-top: 6px;
-                font-size: 13px;
+                margin-top: 8px;
+                font-size: 12.5px;
                 line-height: 1.5;
                 word-break: break-all;
+                border: 1px solid rgba(59, 130, 246, 0.04);
+            }}
+            
+            .remark-box::before {{
+                content: "";
+                position: absolute;
+                top: 8px;
+                bottom: 8px;
+                left: 6px;
+                width: 3px;
+                background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+                border-radius: 1.5px;
             }}
             
             /* 徽章，加宽字距，色彩更加清新饱满 */
