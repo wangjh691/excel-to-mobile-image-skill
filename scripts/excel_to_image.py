@@ -796,6 +796,37 @@ def generate_card_html(df, stats, week_info):
         for _, row in group.iterrows():
             type_cls = get_badge_class(row['兵种'])
             
+            # 根据兵种生成极细矢量图标
+            army_type = str(row['兵种']).strip()
+            if "安服" in army_type:
+                army_icon_html = f"""
+                <span class="badge {type_cls}">
+                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    {row['兵种']}
+                </span>
+                """
+            elif "行销" in army_type:
+                army_icon_html = f"""
+                <span class="badge {type_cls}">
+                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.41 4.24-4.24 1.41 1.41-4.24 4.24-1.41Z"/></svg>
+                    {row['兵种']}
+                </span>
+                """
+            elif "技服" in army_type:
+                army_icon_html = f"""
+                <span class="badge {type_cls}">
+                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    {row['兵种']}
+                </span>
+                """
+            else:
+                army_icon_html = f"""
+                <span class="badge {type_cls}">
+                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    {row['兵种']}
+                </span>
+                """
+            
             # 协作状态深度融合：合并是否支持与支持人员，展示精致的线稿头像徽章，并增加边框防褪色
             is_support = str(row['是否支持']).strip() == "是" and str(row['支持人员']).strip()
             if is_support:
@@ -840,15 +871,26 @@ def generate_card_html(df, stats, week_info):
                         <span class="customer-name">{row['客户名称']}</span>
                     </div>
                     <div class="card-header-badges">
-                        <span class="badge {type_cls}">{row['兵种']}</span>
-                        <span class="badge badge-hours">{row['预计工时（h）']}小时</span>
+                        {army_icon_html}
+                        <span class="badge badge-hours">
+                            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            {row['预计工时（h）']}小时
+                        </span>
                     </div>
                 </div>
                 
                 <div class="card-body">
                     <div class="card-grid">
                         <div class="grid-item-type">
-                            <span class="field-label">工作类型</span>
+                            <span class="field-label">
+                                <svg class="badge-icon" style="vertical-align: -1.5px; margin-right: 3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>工作类型
+                            </span>
                             <span class="field-value font-semibold text-dark">{row['工作类型']}</span>
                         </div>
                         <div class="grid-item-collab">
@@ -856,7 +898,14 @@ def generate_card_html(df, stats, week_info):
                             <span class="field-value">{collab_html}</span>
                         </div>
                         <div class="grid-item-time">
-                            <span class="field-label">计划时间</span>
+                            <span class="field-label">
+                                <svg class="badge-icon" style="vertical-align: -1.5px; margin-right: 3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>计划时间
+                            </span>
                             <span class="field-value text-dark">{row['计划时间']}</span>
                         </div>
                     </div>
@@ -912,8 +961,8 @@ def generate_card_html(df, stats, week_info):
                     radial-gradient(circle at 100% 25%, rgba(249, 115, 22, 0.15) 0%, transparent 55%),
                     radial-gradient(circle at 10% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
                     radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.13) 0%, transparent 45%),
-                    radial-gradient(rgba(59, 130, 246, 0.08) 1.5px, transparent 0);
-                background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+                    radial-gradient(rgba(59, 130, 246, 0.05) 1.1px, transparent 0);
+                background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 20px 20px;
                 color: var(--text-main);
                 margin: 0;
                 padding: 18px 12px 30px 12px;
@@ -1217,13 +1266,13 @@ def generate_card_html(df, stats, week_info):
                 border: 1px solid rgba(255, 255, 255, 0.75); 
                 border-radius: var(--radius-md); 
                 padding: 15px 16px;
-                box-shadow: var(--shadow-card), inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
+                box-shadow: 0 12px 28px -4px rgba(59, 130, 246, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.02), inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
             }}
             
             .plan-card-accent {{
                 background: rgba(255, 255, 255, 0.84);
                 border: 1px solid rgba(59, 130, 246, 0.2); 
-                box-shadow: 0 12px 30px -8px rgba(59, 130, 246, 0.08), 0 2px 8px -2px rgba(59, 130, 246, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
+                box-shadow: 0 16px 36px -8px rgba(59, 130, 246, 0.09), 0 4px 16px -2px rgba(59, 130, 246, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
             }}
             
             /* 卡片右下角背景序号水印 - 引入叠印混合模式，完美融合背景色彩 */
@@ -1605,7 +1654,7 @@ def calculate_stats(df):
     unapplied_sales = [name for name in SALES_LIST if name not in applied_sales]
     
     stats['unapplied_sales_count'] = len(unapplied_sales)
-    stats['unapplied_sales_names'] = "、".join(unapplied_sales)
+    stats['unapplied_sales_names'] = "  ·  ".join(unapplied_sales)
     if unapplied_sales:
         stats['unapplied_sales_html'] = "".join([f'<span class="unapplied-tag">{name}</span>' for name in unapplied_sales])
     else:
