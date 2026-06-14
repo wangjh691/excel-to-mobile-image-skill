@@ -803,20 +803,49 @@ def generate_card_html(df, stats, week_info):
         </html>
         """
 
-    # 根据销售进行分组，使用 sort=False 确保拼音字母排序不被覆盖
-    grouped = df.groupby('销售', sort=False)
+    SALES_LIST = ["邓正春", "饶达琴", "段振华", "钱丽云", "詹文成", "伍斌", "吴刚", "张进", "贺欢"]
+    all_sales = list(SALES_LIST)
+    if '销售' in df.columns:
+        excel_sales = [str(x).strip() for x in df['销售'].dropna().unique() if str(x).strip()]
+        for s in excel_sales:
+            if s not in all_sales:
+                all_sales.append(s)
+                
+    # 构造每个销售的数据以及任务数、总工时以做排序
+    sales_data_list = []
+    for s_name in all_sales:
+        if s_name in df['销售'].values:
+            group = df[df['销售'] == s_name]
+            task_count = len(group)
+            try:
+                sales_hours = pd.to_numeric(group['预计工时（h）'], errors='coerce').fillna(0).sum()
+            except Exception:
+                sales_hours = 0
+        else:
+            group = pd.DataFrame(columns=df.columns)
+            task_count = 0
+            sales_hours = 0
+        sales_data_list.append((s_name, group, task_count, sales_hours))
+        
+    # 按任务数（第2项）降序排序
+    sales_data_list.sort(key=lambda x: x[2], reverse=True)
     
     sections_html = ""
-    for sales_name, group in grouped:
+    for sales_name, group, task_count, sales_hours in sales_data_list:
         sales_char = str(sales_name)[0] if sales_name else "销"
         avatar_style = get_sales_avatar_style(sales_name)
-        sales_hours = 0
-        try:
-            sales_hours = pd.to_numeric(group['预计工时（h）'], errors='coerce').fillna(0).sum()
-        except Exception:
-            pass
             
         group_cards_html = ""
+        if group.empty:
+            group_cards_html = """
+            <div class="empty-cards-notice">
+                <svg class="empty-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                暂无本周技术安排任务
+            </div>
+            """
+            
         for _, row in group.iterrows():
             type_cls = get_badge_class(row['兵种'])
             
@@ -1690,6 +1719,27 @@ def generate_card_html(df, stats, week_info):
                 line-height: 1.4;
             }}
             
+            .empty-cards-notice {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                background: rgba(255, 255, 255, 0.45);
+                border: 1px dashed rgba(100, 116, 139, 0.15);
+                border-radius: var(--radius-md);
+                padding: 24px;
+                color: var(--text-muted);
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0.05em;
+            }}
+            
+            .empty-notice-icon {{
+                width: 14px;
+                height: 14px;
+                opacity: 0.6;
+            }}
+
             .footer {{
                 text-align: center;
                 margin-top: 30px;
@@ -1825,32 +1875,43 @@ def main():
         # 1. 顶部基础区域（header约120px + spacing约100px）
         total_height = 220
         
-        # 2. 销售分组头部（每一个销售 header 占约 45px）
-        sales_count = df['销售'].nunique() if '销售' in df.columns else 0
-        total_height += sales_count * 45
-        
-        # 3. 遍历每一个卡片（每一行记录）
-        for _, row in df.iterrows():
-            # 卡片基础高度（不含备注）：
-            # 包含卡片边距、Header（客户名称、兵种标签、预计工时）、Body网格（工作类型、协作人员、计划时间）
-            card_base = 110
+        # 2. 构造与渲染相同的所有销售列表，确保估算绝对准确
+        SALES_LIST = ["邓正春", "饶达琴", "段振华", "钱丽云", "詹文成", "伍斌", "吴刚", "张进", "贺欢"]
+        all_sales = list(SALES_LIST)
+        if '销售' in df.columns:
+            excel_sales = [str(x).strip() for x in df['销售'].dropna().unique() if str(x).strip()]
+            for s in excel_sales:
+                if s not in all_sales:
+                    all_sales.append(s)
+
+        # 3. 遍历每个销售估算其对应区块高度
+        for s_name in all_sales:
+            # 每一个销售 header 占约 45px
+            total_height += 45
             
-            # 如果客户名称过长可能折行（超过 12 个字，累加 20px）
-            cust_name = str(row.get('客户名称', '')).strip()
-            if len(cust_name) > 12:
-                card_base += 20
-                
-            # 备注高度计算：
-            # 备注字号为 13px，卡片备注宽度大约能放 28 个汉字
-            remark = str(row.get('备注', '')).strip()
-            if remark:
-                # 备注基础盒子高度（含 margin-top 6px, padding 8px 12px, border）约 25px
-                # 备注文字行高约 20px
-                lines = (len(remark) // 28) + 1
-                card_base += 25 + (lines * 20)
-                
-            # 卡片底部 margin 约 8px
-            total_height += card_base + 8
+            if s_name in df['销售'].values:
+                group = df[df['销售'] == s_name]
+                for _, row in group.iterrows():
+                    # 卡片基础高度（不含备注）：
+                    # 包含卡片边距、Header（客户名称、兵种标签、预计工时）、Body网格（工作类型、协作人员、计划时间）
+                    card_base = 110
+                    
+                    # 如果客户名称过长可能折行（超过 12 个字，累加 20px）
+                    cust_name = str(row.get('客户名称', '')).strip()
+                    if len(cust_name) > 12:
+                        card_base += 20
+                        
+                    # 备注高度计算
+                    remark = str(row.get('备注', '')).strip()
+                    if remark:
+                        lines = (len(remark) // 28) + 1
+                        card_base += 25 + (lines * 20)
+                        
+                    # 卡片底部 margin 约 8px
+                    total_height += card_base + 8
+            else:
+                # 任务数为 0 的销售渲染空安排占位卡，高度约 65px + 8px margin
+                total_height += 73
             
         # 4. 底部 END 标识和间距约 100px，外加 300px 的绝对安全裕量（多余的部分会被 marker 扫描裁剪掉，确保绝对不截断）
         estimated_height = total_height + 100 + 300
