@@ -1437,7 +1437,7 @@ def generate_card_html(df, stats, week_info):
                 font-size: 11px;
                 color: var(--text-muted);
                 letter-spacing: 0.2em;
-                margin-top: 40px;
+                margin-top: 24px;
                 font-weight: 700;
                 position: relative;
                 z-index: 2;
@@ -1533,7 +1533,7 @@ def generate_card_html(df, stats, week_info):
         <div class="footer-end">- END -</div>
         
         <!-- 智能裁剪定位标记线 -->
-        <div style="height: 2px; background-color: #0f172a; margin-top: 30px;"></div>
+        <div style="height: 2px; background-color: #0f172a; margin-top: 15px;"></div>
     </body>
     </html>
     """
