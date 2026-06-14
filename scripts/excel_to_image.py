@@ -1545,7 +1545,7 @@ def generate_card_html(df, stats, week_info):
                     </span>
                     <div class="stat-info-block">
                         <div class="stat-label">无技术安排销售</div>
-                        <div class="stat-val" style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; width: 100%;">{stats['unapplied_sales_html']}</div>
+                        <div class="stat-val" style="font-size: { '14px' if not stats['unapplied_sales_names'] else '9.5px' }; line-height: 1.45; font-weight: { '700' if not stats['unapplied_sales_names'] else '600' }; word-break: break-all; margin-top: 4px; color: { 'var(--text-muted)' if not stats['unapplied_sales_names'] else '#475569' }; letter-spacing: 0.03em; font-family: var(--font-sans);">{stats['unapplied_sales_names'] or '无'}</div>
                     </div>
                 </div>
             </div>
