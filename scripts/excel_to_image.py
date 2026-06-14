@@ -707,19 +707,25 @@ def generate_table_html(df, stats):
 
 def get_sales_avatar_style(name):
     """
-    根据销售人员姓名哈希计算出固定的莫兰迪色系渐变背景，使头像千人千面且保持视觉和谐
+    根据销售人员姓名哈希计算出固定的莫兰迪色系渐变背景，钱丽云作为江西办唯一女销售固定粉色渐变，其余男销售在蓝绿橙紫中随机哈希。
     """
-    palettes = [
-        ("linear-gradient(135deg, #a78bfa, #c084fc)", "#ffffff"), # 薰衣草紫
-        ("linear-gradient(135deg, #fb923c, #ffb703)", "#ffffff"), # 暖金橙
-        ("linear-gradient(135deg, #60a5fa, #3b82f6)", "#ffffff"), # 经典海蓝
-        ("linear-gradient(135deg, #34d399, #059669)", "#ffffff"), # 翡翠绿
-        ("linear-gradient(135deg, #f472b6, #fb7185)", "#ffffff"), # 珊瑚粉
-        ("linear-gradient(135deg, #2ec4b6, #0f172a)", "#ffffff"), # 青碧绿
-    ]
-    char_sum = sum(ord(c) for c in str(name))
-    idx = char_sum % len(palettes)
-    bg, fg = palettes[idx]
+    name_str = str(name).strip()
+    if name_str == "钱丽云":
+        # 钱丽云（女性销售）固定为温馨优雅的珊瑚粉渐变
+        bg, fg = ("linear-gradient(135deg, #f472b6, #fb7185)", "#ffffff")
+    else:
+        # 其他男性销售在其余经典莫兰迪配色中随机哈希分配（排除粉色）
+        palettes = [
+            ("linear-gradient(135deg, #a78bfa, #c084fc)", "#ffffff"), # 薰衣草紫
+            ("linear-gradient(135deg, #fb923c, #ffb703)", "#ffffff"), # 暖金橙
+            ("linear-gradient(135deg, #60a5fa, #3b82f6)", "#ffffff"), # 经典海蓝
+            ("linear-gradient(135deg, #34d399, #059669)", "#ffffff"), # 翡翠绿
+            ("linear-gradient(135deg, #2ec4b6, #0f172a)", "#ffffff"), # 青碧绿
+        ]
+        char_sum = sum(ord(c) for c in name_str)
+        idx = char_sum % len(palettes)
+        bg, fg = palettes[idx]
+        
     return f"background: {bg}; color: {fg}; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);"
 
 def generate_card_html(df, stats, week_info):
