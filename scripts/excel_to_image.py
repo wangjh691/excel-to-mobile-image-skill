@@ -785,6 +785,7 @@ def generate_card_html(df, stats, week_info):
     
     sections_html = ""
     for sales_name, group in grouped:
+        sales_char = str(sales_name)[0] if sales_name else "销"
         sales_hours = 0
         try:
             sales_hours = pd.to_numeric(group['预计工时（h）'], errors='coerce').fillna(0).sum()
@@ -869,12 +870,7 @@ def generate_card_html(df, stats, week_info):
         <div class="sales-section">
             <div class="sales-section-header">
                 <div class="sales-info">
-                    <span class="sales-avatar">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </span>
+                    <span class="sales-avatar">{sales_char}</span>
                     <span class="sales-title">{sales_name}</span>
                 </div>
                 <div class="sales-meta">
@@ -1133,13 +1129,14 @@ def generate_card_html(df, stats, week_info):
                 position: relative;
             }}
             
-            /* 细密渐变虚线分栏引线，连接姓名与右侧指标，提升精密科技质感 */
+            /* 渐变虚线分栏引线，由中心向两端柔和淡出，极富光影质感 */
             .sales-section-header::after {{
                 content: "";
                 flex-grow: 1;
-                border-bottom: 1px dashed rgba(59, 130, 246, 0.15);
+                height: 1px;
+                background-image: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.35) 20%, rgba(139, 92, 246, 0.35) 50%, rgba(59, 130, 246, 0.35) 80%, transparent);
                 margin: 0 16px;
-                height: 0;
+                opacity: 0.8;
             }}
             
             .sales-info {{
@@ -1159,11 +1156,9 @@ def generate_card_html(df, stats, week_info):
                 color: white; 
                 margin-right: 10px;
                 box-shadow: 0 3px 8px rgba(59, 130, 246, 0.15);
-            }}
-            
-            .sales-avatar svg {{
-                width: 15px;
-                height: 15px;
+                font-size: 13px;
+                font-weight: 800;
+                line-height: 1;
             }}
             
             .sales-title {{
@@ -1394,43 +1389,48 @@ def generate_card_html(df, stats, week_info):
             .badge-yes {{ 
                 background-color: var(--badge-yes-bg); 
                 color: var(--badge-yes-text); 
-                border: 1px solid rgba(59, 130, 246, 0.15);
+                border: 1px solid rgba(59, 130, 246, 0.22);
+                box-shadow: 0 1px 2px rgba(59, 130, 246, 0.03);
             }}
             .badge-no {{ 
                 background-color: var(--badge-no-bg); 
                 color: var(--badge-no-text); 
-                border: 1px solid rgba(100, 116, 139, 0.1);
+                border: 1px solid rgba(100, 116, 139, 0.15);
             }}
             .badge-af {{ 
                 background-color: var(--badge-af-bg); 
                 color: var(--badge-af-text); 
-                border: 1px solid rgba(16, 185, 129, 0.18);
+                border: 1px solid rgba(16, 185, 129, 0.25);
+                box-shadow: 0 1px 2px rgba(16, 185, 129, 0.03);
             }}
             .badge-xf {{ 
                 background-color: var(--badge-xf-bg); 
                 color: var(--badge-xf-text); 
-                border: 1px solid rgba(249, 115, 22, 0.18);
+                border: 1px solid rgba(249, 115, 22, 0.25);
+                box-shadow: 0 1px 2px rgba(249, 115, 22, 0.03);
             }}
             .badge-jf {{ 
                 background-color: var(--badge-jf-bg); 
                 color: var(--badge-jf-text); 
-                border: 1px solid rgba(99, 102, 241, 0.18);
+                border: 1px solid rgba(99, 102, 241, 0.25);
+                box-shadow: 0 1px 2px rgba(99, 102, 241, 0.03);
             }}
             .badge-other {{ 
                 background-color: var(--badge-other-bg); 
                 color: var(--badge-other-text); 
-                border: 1px solid rgba(100, 116, 139, 0.1);
+                border: 1px solid rgba(100, 116, 139, 0.15);
             }}
             
-            /* 工时胶囊：橙色高对比 */
+            /* 工时胶囊：橙色高对比发光有机贴片 */
             .badge-hours {{
-                background-color: rgba(249, 115, 22, 0.08);
+                background-color: rgba(249, 115, 22, 0.09);
                 color: #ea580c;
-                border: 1px solid rgba(249, 115, 22, 0.18);
+                border: 1px solid rgba(249, 115, 22, 0.25);
                 border-radius: 12px; 
                 font-family: "PingFang SC", sans-serif;
-                font-size: 11px;
-                font-weight: 700;
+                font-size: 10.5px;
+                font-weight: 800;
+                box-shadow: 0 1.5px 4px rgba(249, 115, 22, 0.06);
             }}
             
             .badge-icon {{
@@ -1446,14 +1446,27 @@ def generate_card_html(df, stats, week_info):
             .font-mono {{ font-family: "PingFang SC", -apple-system, sans-serif; }}
             
             .footer-end {{
-                text-align: center;
-                font-size: 11px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                font-size: 10.5px;
                 color: var(--text-muted);
-                letter-spacing: 0.2em;
+                letter-spacing: 0.25em;
                 margin-top: 24px;
-                font-weight: 700;
+                font-weight: 800;
                 position: relative;
                 z-index: 2;
+                opacity: 0.7;
+            }}
+            
+            .footer-end::before, .footer-end::after {{
+                content: "";
+                width: 4px;
+                height: 4px;
+                background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+                border-radius: 50%;
+                box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
             }}
             
             .unapplied-tag {{
@@ -1532,7 +1545,7 @@ def generate_card_html(df, stats, week_info):
                     </span>
                     <div class="stat-info-block">
                         <div class="stat-label">无技术安排销售</div>
-                        <div class="stat-val" style="font-size: { '14px' if not stats['unapplied_sales_names'] else '9.5px' }; line-height: 1.45; font-weight: { '700' if not stats['unapplied_sales_names'] else '600' }; word-break: break-all; margin-top: 4px; color: { 'var(--text-muted)' if not stats['unapplied_sales_names'] else '#475569' }; letter-spacing: 0.03em; font-family: var(--font-sans);">{stats['unapplied_sales_names'] or '无'}</div>
+                        <div class="stat-val" style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; width: 100%;">{stats['unapplied_sales_html']}</div>
                     </div>
                 </div>
             </div>
