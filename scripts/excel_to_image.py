@@ -15,7 +15,7 @@ import re
 CSS_VARIABLES = """
 :root {
   /* 顶级字体栈变量：英文/数字首选Inter与苹果SF，中文首选云端思源黑体Noto Sans SC与本地苹方SC */
-  --font-sans: "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   --primary: #0f172a;       /* slate-900 */
@@ -397,7 +397,7 @@ def beautify_excel(file_path):
         
     wb.save(file_path)
 
-def crop_image_by_marker(image_path, marker_color=(15, 23, 42), tolerance=12):
+def crop_image_by_marker(image_path, marker_color=(15, 23, 42), tolerance=25):
     """
     从下往上扫描图片，寻找特定颜色的 marker 横线，进行高度裁剪以防多余留白 and 内容截断
     """
@@ -436,7 +436,7 @@ def crop_image_by_marker(image_path, marker_color=(15, 23, 42), tolerance=12):
         if marker_y is not None:
             # 裁剪到 marker 线下方 10 像素处
             cropped_img = img.crop((0, 0, width, min(height, marker_y + 10)))
-            cropped_img.save(image_path)
+            cropped_img.save(image_path, optimize=True)
             print(f"智能图像处理成功：检测到结束标记 (y={marker_y})，长图高度自适应裁剪为 {marker_y + 10}px")
             return True
         else:
@@ -490,10 +490,7 @@ def generate_table_html(df, stats):
     <html lang="zh-CN">
     <head>
         <meta charset="utf-8">
-        <!-- 引入 Noto Sans SC 和 Inter 屏幕精美字体 -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+        <!-- 使用本地系统预装的高清字体栈（PingFang SC/Microsoft YaHei/SF Pro），防网络超时导致字体模糊 -->
         <style>
             {CSS_VARIABLES}
             
@@ -897,10 +894,7 @@ def generate_card_html(df, stats, week_info):
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- 引入现代屏幕优化字体 Inter 与 JetBrains Mono 极速加载 -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+        <!-- 使用本地系统预装的高清字体栈（PingFang SC/Microsoft YaHei/SF Pro），防网络超时导致字体模糊 -->
         <style>
             {CSS_VARIABLES}
             
@@ -1638,15 +1632,43 @@ def main():
         sys.exit(1)
     
     # 动态估算渲染高度，自适应调整视口，防截断并提升小图性能
-    sales_count = df['销售'].nunique() if '销售' in df.columns else 0
-    row_count = len(df)
-    
     if df.empty:
         card_height = 800
     else:
-        # 每一个计划卡片平均 CSS 高度约 130px，每个销售 header 约 45px，大幅降低高度冗余，提速 Chrome 渲染和图片 PNG 编码时间
-        estimated_height = 380 + (sales_count * 45) + (row_count * 132) + 120
-        card_height = max(1100, min(15000, estimated_height))
+        # 高精度动态高度计算：
+        # 1. 顶部基础区域（header约120px + stats-bar约160px + spacing约100px）
+        total_height = 380
+        
+        # 2. 销售分组头部（每一个销售 header 占约 45px）
+        sales_count = df['销售'].nunique() if '销售' in df.columns else 0
+        total_height += sales_count * 45
+        
+        # 3. 遍历每一个卡片（每一行记录）
+        for _, row in df.iterrows():
+            # 卡片基础高度（不含备注）：
+            # 包含卡片边距、Header（客户名称、兵种标签、预计工时）、Body网格（工作类型、协作人员、计划时间）
+            card_base = 110
+            
+            # 如果客户名称过长可能折行（超过 12 个字，累加 20px）
+            cust_name = str(row.get('客户名称', '')).strip()
+            if len(cust_name) > 12:
+                card_base += 20
+                
+            # 备注高度计算：
+            # 备注字号为 13px，卡片备注宽度大约能放 28 个汉字
+            remark = str(row.get('备注', '')).strip()
+            if remark:
+                # 备注基础盒子高度（含 margin-top 6px, padding 8px 12px, border）约 25px
+                # 备注文字行高约 20px
+                lines = (len(remark) // 28) + 1
+                card_base += 25 + (lines * 20)
+                
+            # 卡片底部 margin 约 8px
+            total_height += card_base + 8
+            
+        # 4. 底部 END 标识和间距约 100px，外加 300px 的绝对安全裕量（多余的部分会被 marker 扫描裁剪掉，确保绝对不截断）
+        estimated_height = total_height + 100 + 300
+        card_height = max(1100, min(20000, estimated_height))
     
     print("正在调用 Chrome Headless 渲染图片...")
     print(f"正在渲染手机卡片流长图 (480x{card_height} 自动裁剪) -> {card_png_path}")
@@ -1703,6 +1725,16 @@ def main():
     # 执行智能高精度高度裁剪
     crop_image_by_marker(card_png_path)
     
+    # 额外导出超高清手机分享版 JPG 格式，防止被微信二次压缩
+    card_jpg_path = card_png_path.replace(".png", ".jpg")
+    try:
+        img = Image.open(card_png_path)
+        img.convert("RGB").save(card_jpg_path, "JPEG", quality=95, subsampling=0)
+        has_jpg = True
+    except Exception as e:
+        print(f"导出分享版 JPG 失败: {e}")
+        has_jpg = False
+    
     # 清理临时渲染 HTML
     try:
         os.remove(card_html_path)
@@ -1712,7 +1744,9 @@ def main():
         
     print("\n转换全部完成！已成功生成以下文件：")
     print(f"1. [整理后的 Excel] {excel_out}")
-    print(f"2. [手机卡片流长图] {card_png_path}")
+    print(f"2. [手机卡片流长图(PNG无损)] {card_png_path}")
+    if has_jpg:
+        print(f"3. [手机卡片流长图(JPG分享)] {card_jpg_path} (已优化体积，防社交软件二次压缩发虚)")
 
 if __name__ == "__main__":
     main()
