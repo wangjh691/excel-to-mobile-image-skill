@@ -256,17 +256,37 @@ def simplify_plan_time(time_str):
         
     range_strs = []
     for r_start, r_end in ranges:
-        if r_start == r_end:
-            d, t = slot_to_str(r_start)
-            range_strs.append(f"{d}{t}")
-        elif r_start + 1 == r_end and r_start % 2 == 0:
-            # 同一天的上午和下午，合并为全天
-            d, _ = slot_to_str(r_start)
-            range_strs.append(f"{d}全天")
-        else:
-            d1, t1 = slot_to_str(r_start)
-            d2, t2 = slot_to_str(r_end)
-            range_strs.append(f"{d1}{t1}至{d2}{t2}")
+        parts_list = []
+        s = r_start
+        e = r_end
+        
+        # 1. 剥离头部半天（若起始于下午，则该天单独构成“X下午”并剥离）
+        if s % 2 == 1:
+            d_str, t_str = slot_to_str(s)
+            parts_list.append(f"{d_str}{t_str}")
+            s += 1
+            
+        # 2. 剥离尾部半天（若结束于上午，则该天单独构成“X上午”并剥离）
+        tail_part = None
+        if e % 2 == 0:
+            d_str, t_str = slot_to_str(e)
+            tail_part = f"{d_str}{t_str}"
+            e -= 1
+            
+        # 3. 合并中间的整天部分
+        if s <= e:
+            ds, _ = slot_to_str(s)
+            de, _ = slot_to_str(e)
+            if ds == de:
+                parts_list.append(f"{ds}全天")
+            else:
+                parts_list.append(f"{ds}至{de}全天")
+                
+        # 补回尾部半天
+        if tail_part:
+            parts_list.append(tail_part)
+            
+        range_strs.append("、".join(parts_list))
             
     return "、".join(range_strs)
 
