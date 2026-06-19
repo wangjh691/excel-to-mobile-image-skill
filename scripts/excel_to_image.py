@@ -286,7 +286,11 @@ def simplify_plan_time(time_str):
         if tail_part:
             parts_list.append(tail_part)
             
-        range_strs.append("、".join(parts_list))
+        # 如果这个区间只有头部半天和尾部半天（中间没有整天），说明是跨日的连续半天，用“至”连接；否则用“、”连接
+        if len(parts_list) == 2 and (r_start % 2 == 1) and (r_end % 2 == 0):
+            range_strs.append("至".join(parts_list))
+        else:
+            range_strs.append("、".join(parts_list))
             
     return "、".join(range_strs)
 
