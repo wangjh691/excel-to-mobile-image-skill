@@ -334,6 +334,15 @@ def clean_and_prepare_data(input_path):
     # 3. 填充 NaN 为空字符串，预计工时如果为 NaN 填 0 或空，保持数据干净
     df = df.fillna('')
     
+    # 提报发起人别名映射归一化
+    if '提报发起人' in df.columns:
+        name_map = {
+            '饭团Dai': '张进',
+            '钱钱': '钱丽云',
+            '华': '段振华'
+        }
+        df['提报发起人'] = df['提报发起人'].astype(str).str.strip().replace(name_map)
+    
     # 4. 新增序号字段并放置在第一列，格式化为两位数
     df.insert(0, '序号', [f"{i:02d}" for i in range(1, len(df) + 1)])
     
@@ -1011,7 +1020,14 @@ def generate_card_html(df, stats, week_info):
                             <span class="field-value font-semibold text-dark">{row['提报发起人'] or '无'}</span>
                         </div>
                         <div class="grid-item-collab">
-                            <span class="field-label">协作安排</span>
+                            <span class="field-label">
+                                <svg class="badge-icon" style="vertical-align: -1.5px; margin-right: 3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>协作安排
+                            </span>
                             <span class="field-value">{collab_html}</span>
                         </div>
                         <div class="grid-item-time">
