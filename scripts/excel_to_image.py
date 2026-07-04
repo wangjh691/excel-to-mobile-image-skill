@@ -309,10 +309,15 @@ def clean_and_prepare_data(input_path):
         temp_dates = pd.to_datetime(df['该周周一日期'], errors='coerce')
         df = df[temp_dates > pd.Timestamp.now()].copy()
     
-    # 1. 排序（按销售申请任务数降序、姓名拼音升序排序，确保 Excel 和手机长图序号是完全一致且顺序递增的）
+    # 1. 排序（按销售申请任务数降序、总工时数降序、姓名拼音升序排序，确保 Excel 和手机长图序号是完全一致且顺序递增的）
     if '销售' in df.columns:
         sales_counts = df['销售'].value_counts().to_dict()
         df['_task_count'] = df['销售'].map(lambda x: sales_counts.get(x, 0))
+        
+        # 计算每个销售的预计工时总和以作为第二排序键
+        df['预计工时（h）'] = pd.to_numeric(df['预计工时（h）'], errors='coerce').fillna(0)
+        sales_hours_dict = df.groupby('销售')['预计工时（h）'].sum().to_dict()
+        df['_sales_hours'] = df['销售'].map(lambda x: sales_hours_dict.get(x, 0))
         
         try:
             from pypinyin import pinyin, Style
@@ -324,9 +329,9 @@ def clean_and_prepare_data(input_path):
                 return str(name).encode('gb18030', errors='ignore')
                 
         df['_pinyin'] = df['销售'].map(get_pinyin_key)
-        # 按任务数降序、姓名拼音升序排序
-        df = df.sort_values(by=['_task_count', '_pinyin'], ascending=[False, True])
-        df = df.drop(columns=['_task_count', '_pinyin'])
+        # 按任务数降序、总工时降序、姓名拼音升序排序
+        df = df.sort_values(by=['_task_count', '_sales_hours', '_pinyin'], ascending=[False, False, True])
+        df = df.drop(columns=['_task_count', '_sales_hours', '_pinyin'])
         df = df.reset_index(drop=True)
     else:
         df['销售'] = ''
