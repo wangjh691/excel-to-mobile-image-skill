@@ -338,7 +338,7 @@ def clean_and_prepare_data(input_path):
     df.insert(0, '序号', [f"{i:02d}" for i in range(1, len(df) + 1)])
     
     # 5. 保留指定字段并按顺序排列
-    target_columns = ['序号', '所在月周', '销售', '兵种', '客户名称', '工作类型', '是否支持', '支持人员', '计划时间', '预计工时（h）', '备注']
+    target_columns = ['序号', '所在月周', '销售', '提报发起人', '兵种', '客户名称', '工作类型', '是否支持', '支持人员', '计划时间', '预计工时（h）', '备注']
     
     # 容错：如果缺少某些字段，创建空列
     for col in target_columns:
@@ -396,7 +396,7 @@ def beautify_excel(file_path):
             
             # 对齐逻辑
             col_name = ws.cell(row=1, column=col_idx).value
-            if col_name in ['序号', '所在月周', '销售', '是否支持', '计划时间']:
+            if col_name in ['序号', '所在月周', '销售', '提报发起人', '是否支持', '计划时间']:
                 cell.alignment = align_center
             elif col_name in ['预计工时（h）']:
                 cell.alignment = align_right
@@ -504,6 +504,7 @@ def generate_table_html(df, stats):
             <td class="text-center">{row['序号']}</td>
             <td class="text-center font-semibold">{row['所在月周']}</td>
             <td class="text-center font-semibold text-dark">{row['销售']}</td>
+            <td class="text-center text-muted">{row['提报发起人']}</td>
             <td class="text-center"><span class="badge {type_cls}">{row['兵种']}</span></td>
             <td class="font-semibold text-dark">{row['客户名称']}</td>
             <td>{row['工作类型']}</td>
@@ -711,6 +712,7 @@ def generate_table_html(df, stats):
                         <th class="text-center" style="width: 50px;">序号</th>
                         <th class="text-center" style="width: 90px;">所在月周</th>
                         <th class="text-center" style="width: 80px;">销售</th>
+                        <th class="text-center" style="width: 90px;">提报发起人</th>
                         <th class="text-center" style="width: 70px;">兵种</th>
                         <th style="width: 160px;">客户名称</th>
                         <th style="width: 140px;">工作类型</th>
@@ -998,6 +1000,15 @@ def generate_card_html(df, stats, week_info):
                                 </svg>工作类型
                             </span>
                             <span class="field-value font-semibold text-dark">{row['工作类型']}</span>
+                        </div>
+                        <div class="grid-item-creator">
+                            <span class="field-label">
+                                <svg class="badge-icon" style="vertical-align: -1.5px; margin-right: 3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>发起人
+                            </span>
+                            <span class="field-value font-semibold text-dark">{row['提报发起人'] or '无'}</span>
                         </div>
                         <div class="grid-item-collab">
                             <span class="field-label">协作安排</span>
@@ -1573,7 +1584,15 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .grid-item-type {{
-                width: 90px;
+                width: 85px;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }}
+            
+            .grid-item-creator {{
+                width: 80px;
                 flex-shrink: 0;
                 display: flex;
                 flex-direction: column;
@@ -1581,7 +1600,7 @@ def generate_card_html(df, stats, week_info):
             }}
             
             .grid-item-collab {{
-                width: 105px;
+                width: 95px;
                 flex-shrink: 0;
                 display: flex;
                 flex-direction: column;
