@@ -1053,6 +1053,14 @@ def generate_card_html(df, stats, week_info):
             </div>
             """
             
+        if not group.empty and '提报发起人' in group.columns:
+            m_count = len(group[group['提报发起人'] == name_str])
+        else:
+            m_count = 0
+        tech_count = len(group) - m_count
+        
+        task_info_str = f"{len(group)}项任务（销售提报{m_count}项，技术提报{tech_count}项）"
+
         sections_html += f"""
         <div class="sales-section">
             <div class="sales-section-header">
@@ -1061,7 +1069,7 @@ def generate_card_html(df, stats, week_info):
                     <span class="sales-title">{sales_name}</span>
                 </div>
                 <div class="sales-meta">
-                    <span class="meta-badge">{len(group)} 项任务</span>
+                    <span class="meta-badge">{task_info_str}</span>
                     <span class="meta-badge hours-badge">{sales_hours:g}小时工时</span>
                 </div>
             </div>
