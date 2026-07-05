@@ -1059,7 +1059,16 @@ def generate_card_html(df, stats, week_info):
             m_count = 0
         tech_count = len(group) - m_count
         
-        task_info_str = f"{len(group)}项任务<span style=\"font-size: 10px; font-weight: 500; opacity: 0.85; margin-left: 2px;\">（销售发起{m_count}项，技术发起{tech_count}项）</span>"
+        if len(group) == 0:
+            task_info_str = "0项任务"
+        else:
+            if m_count == 0:
+                detail_str = "全部为技术发起"
+            elif tech_count == 0:
+                detail_str = "全部为销售发起"
+            else:
+                detail_str = f"销售发起{m_count}项，技术发起{tech_count}项"
+            task_info_str = f"{len(group)}项任务<span style=\"font-size: 10px; font-weight: 500; opacity: 0.85; margin-left: 2px;\">（{detail_str}）</span>"
 
         sections_html += f"""
         <div class="sales-section">
@@ -2050,7 +2059,7 @@ def main():
     ]
     try:
         print("正在启动 Chrome 进行截图...")
-        result = subprocess.run(cmd_card, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd_card, capture_output=True, text=True, timeout=90)
         if result.returncode != 0:
             print(f"Chrome 运行失败，退出码: {result.returncode}")
             print(f"Stdout:\n{result.stdout}")
@@ -2058,7 +2067,7 @@ def main():
         else:
             print("Chrome 截图成功！")
     except subprocess.TimeoutExpired as e:
-        print("Chrome 截图超时（30秒限制）！已强制终止。")
+        print("Chrome 截图超时（90秒限制）！已强制终止。")
         print(f"目前已有的 stdout:\n{e.stdout}")
         print(f"目前已有的 stderr:\n{e.stderr}")
     except Exception as e:
