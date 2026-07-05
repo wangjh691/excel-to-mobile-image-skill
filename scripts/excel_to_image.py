@@ -1059,7 +1059,7 @@ def generate_card_html(df, stats, week_info):
             m_count = 0
         tech_count = len(group) - m_count
         
-        task_info_str = f"{len(group)}项任务（销售提报{m_count}项，技术提报{tech_count}项）"
+        task_info_str = f"{len(group)}项任务<span style=\"font-size: 10px; font-weight: 500; opacity: 0.85; margin-left: 2px;\">（销售发起{m_count}项，技术发起{tech_count}项）</span>"
 
         sections_html += f"""
         <div class="sales-section">
